@@ -14,7 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.0.1/vuex.js"></script>
     <script src="js/vendor/jquery.cookie.js"></script>
     <script src="colorpicker/js/colorpicker.js"></script>
-    <script src="datetimepicker/jquery.datetimepicker.js"></script>
+    <script src="datetimepicker/jquery.datetimepicker.full.js"></script>
     <script src="js/todo-store.js"></script>
     <script src="js/todo-components.js"></script>
     <script src="js/todo.js"></script>
@@ -28,19 +28,18 @@
                 @click="_logout($event)">Logout</a></span>
     </div>
     <div id="content">
-
-        <authentication inline-template :admin-user="adminUser" v-if="adminUser === false && !checkedLogin"
+        <authentication inline-template :admin-user="adminUser" v-if="!adminUser && !checkedLogin"
                         @update-admin-user="_updateAdminUser">
             <div id="todo-login">
                 <p v-show="errorMsg" class="message error">{{errorMsg}}</p>
                 <p class="form-row">
                     <label>Username</label>
-                    <input type="text" v-model="loginAuth.usr" value="admin">
+                    <input type="text" v-model="loginAuth.usr" value="admin" @keyup="_maybeLogin($event)">
                 </p>
 
                 <p class="form-row">
                     <label>Password</label>
-                    <input type="text" v-model="loginAuth.pwd" value="admin">
+                    <input type="text" v-model="loginAuth.pwd" value="admin" @keyup="_maybeLogin($event)">
                 </p>
 
                 <p class="form-row">

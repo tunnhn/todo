@@ -18,12 +18,16 @@
                 $vm.errorMsg = errorMsg;
             }).on('logged in', function (u) {
                 this.emit('update-admin-user', u);
-                $.cookie('todo-authorized-token', u.token);
             });
         },
         methods: {
             _login: function () {
                 this.$root.socket.emit('login', this.loginAuth);
+            },
+            _maybeLogin: function (e) {
+                if (e.keyCode == 13) {
+                    this._login();
+                }
             }
         }
     });
@@ -185,7 +189,13 @@
             }
         },
         mounted: function () {
-            this.$('.item-expired-date').datetimepicker();
+            var $vm = this;
+            this.$('.item-expired-date').datetimepicker({
+                formatDate:'Y/m/d H:i:s',
+                onChangeDateTime: function (dp, $input) {
+                    Vue.set($vm.item, 'expiredDate', $input.val())
+                }
+            });
         },
         methods: {
             getActiveGroupItems: function () {

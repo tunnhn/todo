@@ -34,17 +34,18 @@
                 var $vm = this;
 
                 $vm.load();
-
                 this.socket.on('logged in', function (response) {
                     $vm.errorMsg = '';
                     $vm.setData(response);
-                    $.cookie('hackathon-dec-authorized-token', response.token);
+                    $.cookie('todo-authorized-token', response.adminUser.token);
 
                 }).on('login failed', function (msg) {
                     $vm.errorMsg = msg || 'Login failed';
                 }).on('token-authorized', function (response) {
                     if ($.isPlainObject(response)) {
-                        $vm.setData(response)
+                        $vm.setData(response);
+                    } else {
+                        $vm.checkedLogin = false;
                     }
                 });
 

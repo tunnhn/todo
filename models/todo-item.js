@@ -19,7 +19,7 @@ const todoItem = new mongoose.Schema({
     },
 
     expiredDate: {
-        type: Date,
+        type: String,
         default: ''
     },
 

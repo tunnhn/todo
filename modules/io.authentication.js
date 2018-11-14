@@ -59,6 +59,8 @@ exports = module.exports = function (io) {
                 socket.emit('token-authorized', err);
             });
 
+            console.log(msg)
+
         });
 
         console.log('New user connected')
