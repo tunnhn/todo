@@ -19,6 +19,16 @@
                 state.groups.push(data.group)
             },
             removeGroup: function (state, data) {
+                if (data.removeItems) {
+                    var i;
+                    console.log(data);
+                    for (i = state.items.length; i > 0; i--) {
+                        if (state.items[i - 1].group === data.group) {
+                            state.items.splice(i - 1, 1);
+                        }
+                    }
+                }
+
                 var at = state.groups.findIndex(function (a, b) {
                     return a._id === data.group;
                 });
@@ -49,7 +59,7 @@
                     state.items.splice(at, 1);
                 }
             },
-            updateItem  : function (state, item) {
+            updateItem: function (state, item) {
                 var at = state.items.findIndex(function (a, b) {
                     return a._id === item._id;
                 });
@@ -60,9 +70,7 @@
             },
         };
 
-        var actions = {
-
-        };
+        var actions = {};
 
         return new Vuex.Store({
             state: todoData,

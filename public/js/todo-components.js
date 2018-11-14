@@ -41,6 +41,15 @@
                 errorMsg: ''
             }
         },
+        watch: {
+            group: function (group) {
+                if (group !== false) {
+                    setTimeout(function ($vm) {
+                        $vm.$('.todo__group-name').focus();
+                    }, 100, this);
+                }
+            }
+        },
         computed: {
             todoGroups: function () {
                 return this.todoData.groups || [];
@@ -154,15 +163,21 @@
                     return;
                 }
 
-                let removeItems = false;
-                if (!confirm('Assigns items under this group to \'No group\'?' + "\nOk = Yes, Cancel = No")) {
+                let removeItems = false,
+                    $vm = this;
+
+                if (this.countItems(group).length && !confirm('Assigns items under this group to \'No group\'?' + "\nOk = Yes, Cancel = No")) {
                     removeItems = true;
                 }
 
                 Todo.doAjax('remove-todo-group/' + group, {
                     removeItems: removeItems
                 }, 'get').then(function (r) {
-                    window.Todo.dataStore.commit('removeGroup', {group: r.group});
+                    window.Todo.dataStore.commit('removeGroup', {group: r.group, removeItems: removeItems});
+
+                    if (group === this.selectedGroup) {
+                        $vm.$emit('select-group', -1);
+                    }
                 });
             },
             todoStore: function (a, b) {
@@ -180,6 +195,15 @@
                 errorMsg: ''
             }
         },
+        watch: {
+            item: function (item) {
+                if (item !== false) {
+                    setTimeout(function ($vm) {
+                        $vm.$('.todo__item-name').focus();
+                    }, 100, this);
+                }
+            }
+        },
         computed: {
             todoGroups: function () {
                 return this.todoData.groups || [];
@@ -191,7 +215,7 @@
         mounted: function () {
             var $vm = this;
             this.$('.item-expired-date').datetimepicker({
-                formatDate:'Y/m/d H:i:s',
+                formatDate: 'Y/m/d H:i:s',
                 onChangeDateTime: function (dp, $input) {
                     Vue.set($vm.item, 'expiredDate', $input.val())
                 }

@@ -15,7 +15,8 @@ html, body {
   line-height: 1; }
 
 input[type="text"],
-select {
+select,
+textarea {
   padding: 5px;
   border-radius: 4px;
   background: #FFF;
@@ -24,7 +25,8 @@ select {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  height: 29px; }
+  height: 29px;
+  color: #999; }
 
 a {
   cursor: pointer; }
@@ -222,3 +224,6 @@ a {
     border-radius: 4px;
     box-shadow: 0 0 8px #828282;
     padding: 10px 20px; }
+  #form-add-todo .todo__item-desc {
+    width: 100%;
+    height: 100px; }
