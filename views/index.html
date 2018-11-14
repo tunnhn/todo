@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/todo.css">
+    <link rel="stylesheet" type="text/css" href="fontawesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="colorpicker/css/colorpicker.css">
+    <link rel="stylesheet" type="text/css" href="datetimepicker/jquery.datetimepicker.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.0.1/vuex.js"></script>
+    <script src="js/vendor/jquery.cookie.js"></script>
+    <script src="colorpicker/js/colorpicker.js"></script>
+    <script src="datetimepicker/jquery.datetimepicker.js"></script>
+    <script src="js/todo-store.js"></script>
+    <script src="js/todo-components.js"></script>
+    <script src="js/todo.js"></script>
+    <script src="js/script.js"></script>
+</head>
+<body>
+
+<div id="todo-app">
+    <div id="header">
+        <span class="user" v-show="adminUser.username">Hi, {{adminUser.username}}. <a
+                @click="_logout($event)">Logout</a></span>
+    </div>
+    <div id="content">
+
+        <authentication inline-template :admin-user="adminUser" v-if="adminUser === false && !checkedLogin"
+                        @update-admin-user="_updateAdminUser">
+            <div id="todo-login">
+                <p v-show="errorMsg" class="message error">{{errorMsg}}</p>
+                <p class="form-row">
+                    <label>Username</label>
+                    <input type="text" v-model="loginAuth.usr" value="admin">
+                </p>
+
+                <p class="form-row">
+                    <label>Password</label>
+                    <input type="text" v-model="loginAuth.pwd" value="admin">
+                </p>
+
+                <p class="form-row">
+                    <button class="button" @click="_login">Login</button>
+                </p>
+            </div>
+        </authentication>
+
+        <div id="todo-page" v-if="adminUser !== false">
+            <div id="sidebar" v-if="adminUser !== false">
+
+                <todo-groups :todo-data="todoData" inline-template @select-group="_selectGroup"
+                             :selected-group="selectedGroup">
+                    <div id="todo-groups">
+                        <ul class="list-groups">
+                            <li class="group" @click="_select($event, -1)" :class="selectedGroup == -1 ? 'active' : ''">
+                                All
+                                ({{countItems(-1)}})
+                            </li>
+                            <li v-show="countItems('') > 0" class="group" @click="_select($event, '')"
+                                :class="selectedGroup == '' ? 'active' : ''">No group
+                                ({{countItems('')}})
+                            </li>
+                            <li class="group" v-for="(group, index) in todoGroups" @click="_select($event, group._id)"
+                                class="group"
+                                :class="groupClass(group)">
+                                <div class="group-name">{{group.name}} ({{countItems(group._id)}})</div>
+                                <div class="group-actions">
+                                    <a class="edit" @click="_edit($event, group)"></a>
+                                    <a class="remove" @click="_remove($event, group._id)"></a>
+                                </div>
+                            </li>
+                            <li class="add" v-show="group===false">
+                                <a class="button" @click="_add($event)">Add Group</a>
+                            </li>
+                        </ul>
+
+                        <div id="group__add-form" v-show="group!==false">
+                            <div class="form-window">
+                                <p v-if="errorMsg" class="message error">{{errorMsg}}</p>
+                                <p class="form-row">
+                                    <label>Group name</label>
+                                    <input type="text" class="todo__group-name" v-model="group.name">
+                                </p>
+                                <p class="form-row">
+                                    <label>Color</label>
+                                    <input type="text" class="todo__group-color color" v-model="group.color">
+                                </p>
+                                <p class="form-row">
+                                    <a class="button" @click="_save($event)">Save</a>
+                                    <a class="button" @click="_cancel($event)">Cancel</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </todo-groups>
+
+            </div>
+
+            <todo-items v-if="adminUser !== false" :todo-data="todoData" inline-template :selected-group="selectedGroup"
+                        @select-group="_selectGroup">
+                <div id="todo-list">
+                    <div id="list-actions">
+                        <a class="button" @click="_add($event)">Add Todo</a>
+                    </div>
+                    <ul class="browse-items">
+                        <template v-if="getActiveGroupItems().length">
+                            <li class="item" v-for="(item, index) in getCachedItems()">
+                                <div class="item-name">{{item.name}}</div>
+                                <div class="item-group">
+                                    <span class="todo__label" :style="{'background-color': getGroupColor(item.group)}">{{getGroupName(item.group)}}</span>
+                                </div>
+                                <div class="item-actions">
+                                    <a class="edit" @click="_edit($event, item)"></a>
+                                    <a class="remove" @click="_remove($event, item._id)"></a>
+                                </div>
+                            </li>
+                        </template>
+
+                        <li v-else class="item">No items</li>
+                    </ul>
+                    <div v-show="item!==false" id="form-add-todo">
+                        <div class="form-window">
+                            <p v-show="errorMsg" class="message error">{{errorMsg}}</p>
+                            <p class="form-row">
+                                <label>Name</label>
+                                <input type="text" v-model="item.name">
+                            </p>
+                            <p class="form-row">
+                                <label>Desc.</label>
+                                <input type="text" v-model="item.desc">
+                            </p>
+                            <p class="form-row">
+                                <label>Time</label>
+                                <input type="text" v-model="item.expiredDate" class="item-expired-date">
+                            </p>
+                            <p class="form-row">
+                                <label>Group</label>
+                                <select v-model="item.group">
+                                    <option value="">No group</option>
+                                    <option v-for="(group, index) in todoGroups" :value="group._id">{{group.name}}
+                                    </option>
+                                </select>
+                            </p>
+                            <p class="form-row">
+                                <button class="button" @click="_save($event)">Save</button>
+                                <button class="button" @click="_cancel($event)">Cancel</button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </todo-items>
+        </div>
+    </div>
+
+    <div id="footer"></div>
+</div>
+
+</body>
+</html>

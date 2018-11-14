@@ -1,0 +1,293 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    color: #444;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-size: 13px;
+    line-height: 1.4em;
+}
+
+.button {
+    border: 1px solid #DDD;
+    border-radius: 3px;
+    background: #F5F5F5;
+    padding: 8px 12px;
+    display: inline-block;
+    line-height: 1;
+}
+
+input[type="text"],
+select {
+    padding: 5px;
+    border-radius: 4px;
+    background: #FFF;
+    border: 1px solid #DDD;
+    font-size: 14px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 29px;
+}
+
+a {
+    cursor: pointer;
+}
+
+.message {
+    margin: 0 0 10px 0;
+    &.error {
+        color: #FF0000;
+    }
+}
+
+.todo__label {
+    display: inline-block;
+    font-size: 11px;
+    background: #DDD;
+    border-radius: 3px;
+    padding: 0px 5px;
+    line-height: 21px;
+    vertical-align: middle;
+    height: 21px;
+}
+
+.form-row {
+    margin: 0 0 10px 0;
+    label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+    input[type="text"] {
+        width: 100%;
+    }
+}
+
+#todo-app {
+
+}
+
+#header {
+    height: 40px;
+    background: #00bcd4;
+    line-height: 40px;
+    padding: 0 20px;
+    .user {
+        float: right;
+        color: #FFF;
+    }
+}
+
+#todo-login {
+    display: none;
+    width: 400px;
+    margin: 50px auto;
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    padding: 20px;
+}
+#header,
+#todo-login,
+#todo-page{
+    visibility: hidden;
+}
+#todo-app{
+    &.loaded{
+        #header,
+        #todo-login,
+        #todo-page{
+            visibility: visible;
+        }
+    }
+}
+
+#todo-app {
+    &.loaded {
+        #todo-login {
+            display: block;
+        }
+    }
+}
+
+#todo-page {
+    display: flex;
+    position: fixed;
+    top: 40px;
+    bottom: 0;
+    width: 100%;
+}
+
+#sidebar {
+    flex: 0 0 250px;
+    background: #ecfbff;
+    border-right: 1px solid #DDD;
+    overflow: auto;
+}
+
+#todo-list {
+    flex: 1 1 0;
+}
+
+#todo-groups {
+    .list-groups {
+        list-style: none;
+        margin: 5px 0;
+        padding: 0;
+        .group {
+            padding: 7px 10px;
+            font-size: 15px;
+            cursor: pointer;
+            &.active {
+                font-weight: bold;
+            }
+            &:hover {
+                background: #FFF;
+            }
+        }
+        .add {
+            padding: 10px;
+            text-align: right;
+        }
+    }
+}
+
+#todo-list {
+    overflow: auto;
+    #list-actions {
+        height: 30px;
+        margin: 10px;
+        line-height: 30px;
+    }
+    .browse-items {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border-top: 1px solid #EEE;
+        .item {
+            padding: 0px 10px;
+            border-bottom: 1px solid #DDD;
+            height: 35px;
+            line-height: 35px;
+            cursor: pointer;
+        }
+    }
+}
+
+.group,
+.item {
+    display: flex;
+}
+
+.group {
+    .group-name {
+        flex: 1 1 0;
+    }
+}
+
+.item {
+    .item-name {
+        flex: 1 1 0;
+    }
+}
+
+.group-actions,
+.item-actions {
+    flex: 0 0 40px;
+    visibility: hidden;
+    display: flex;
+    color: #AAA;
+    a {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        line-height: 20px;
+        &:before {
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+        }
+        &.remove {
+            &:before {
+                content: "\f00d";
+            }
+        }
+        &.edit {
+            &:before {
+                content: "\f303";
+                font-size: 14px;
+            }
+        }
+        &:hover {
+            color: #00bcd4;
+        }
+    }
+}
+
+.item-actions {
+    padding-top: 8px;
+}
+
+.group,
+.item {
+    &:hover {
+        .group-actions,
+        .item-actions {
+            visibility: visible;
+        }
+    ;
+    }
+}
+
+.item {
+    .item-group {
+        flex: 0 0 75px;
+        .todo__label {
+            max-width: 75px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background: #00bcd4;
+            color: #FFF;
+        }
+    }
+}
+
+#group__add-form {
+    background: #FFF;
+    padding: 10px 10px 1px 10px;
+    .form-window {
+    }
+    .todo__group-name {
+        width: 100%;
+    }
+}
+
+#form-add-todo {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    &:before {
+        position: fixed;
+        background: #FFF;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0.2;
+        content: '';
+    }
+    .form-window {
+        background: #FFF;
+        z-index: 10000;
+        position: relative;
+        width: 600px;
+        margin: 100px auto;
+        border-radius: 4px;
+        box-shadow: 0 0 8px #828282;
+        padding: 10px 20px;
+    }
+}
