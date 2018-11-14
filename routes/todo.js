@@ -3,24 +3,7 @@ const todoGroupModel = require('../models/todo-group');
 const todoItemModel = require('../models/todo-item');
 
 module.exports = function (app) {
-    //let courseController = require('../controllers/course');
     let router = express.Router();
-
-    // // Check permission
-    // router.get('/api/courses', courseController.checkPermission);
-    // //router.post('/api/courses', courseController.checkPermission);
-    //
-    // // Success
-    // router.get('/api/courses', courseController.getList);
-    // //router.post('/api/courses', courseController.getList);
-    //
-    // router.get('/test/course/:id', courseController.checkPermission);
-    // router.get('/test/course/:id', courseController.getCourse);
-    //
-    //
-    //
-    // router.post('/api/course-create', courseController.checkPermission);
-    // router.post('/api/course-create', courseController.createCourse);
 
     router.get('/get-todo-data', async function (req, res) {
         async function getData() {
@@ -37,12 +20,6 @@ module.exports = function (app) {
         let data = await getData();
         res.send(data)
     });
-
-    // router.get('/add-account', function (req, res) {
-    //     var rows = account.find().exec(function (a, b) {
-    //         res.send(b)
-    //     });
-    // });
 
     router.post('/add-todo-group', function (req, res) {
         let data = app.getRequest('group'),
@@ -139,6 +116,24 @@ module.exports = function (app) {
             }
         });
     });
+
+    router.post('/update-todo-item-status/:id', function (req, res) {
+        todoItemModel.findById(app.getRequest('id'), function (err, item) {
+            if (!item) {
+                return new Error('Could not load Document');
+            } else {
+                var status = app.getRequest('status');
+                item.status = status;
+                item.save(function (err) {
+                    if (err)
+                        res.send('error')
+                    else
+                        res.send('success')
+                });
+            }
+        });
+    });
+
 
     app.use('/', router);
 

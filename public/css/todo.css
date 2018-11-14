@@ -190,7 +190,13 @@ a {
     overflow: hidden;
     text-overflow: ellipsis;
     background: #00bcd4;
-    color: #FFF; }
+    color: #FFF;
+    margin-top: -3px; }
+
+.item .item-date span {
+  font-size: 12px;
+  display: inline-block;
+  margin: 0 5px; }
 
 #group__add-form {
   background: #FFF;

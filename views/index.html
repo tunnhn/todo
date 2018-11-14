@@ -13,6 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.0.1/vuex.js"></script>
     <script src="js/vendor/jquery.cookie.js"></script>
+    <script src="js/vendor/moment.js"></script>
     <script src="colorpicker/js/colorpicker.js"></script>
     <script src="datetimepicker/jquery.datetimepicker.full.js"></script>
     <script src="js/todo-store.js"></script>
@@ -108,7 +109,15 @@
                     <ul class="browse-items">
                         <template v-if="getActiveGroupItems().length">
                             <li class="item" v-for="(item, index) in getCachedItems()">
-                                <div class="item-name">{{item.name}}</div>
+                                <div class="item-name">
+                                    <label>
+                                        <input type="checkbox" v-model="item.status" true-value="completed" false-value="" @change="_updateItemStatus(item)">
+                                    </label>
+                                    {{item.name}}
+                                </div>
+                                <div class="item-date">
+                                    <span v-if="getItemDate(item.expiredDate)">{{getItemDate(item.expiredDate)}}</span>
+                                </div>
                                 <div class="item-group">
                                     <span class="todo__label" :style="{'background-color': getGroupColor(item.group)}">{{getGroupName(item.group)}}</span>
                                 </div>

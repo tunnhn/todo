@@ -27,6 +27,10 @@ const todoItem = new mongoose.Schema({
         type: String
     },
 
+    status: {
+        type: String
+    },
+
     created: {
         type: Date,
         default: Date.now

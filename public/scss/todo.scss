@@ -18,7 +18,7 @@ html, body {
 
 input[type="text"],
 select,
-textarea{
+textarea {
     padding: 5px;
     border-radius: 4px;
     background: #FFF;
@@ -88,16 +88,18 @@ a {
     border-radius: 4px;
     padding: 20px;
 }
+
 #header,
 #todo-login,
-#todo-page{
+#todo-page {
     visibility: hidden;
 }
-#todo-app{
-    &.loaded{
+
+#todo-app {
+    &.loaded {
         #header,
         #todo-login,
-        #todo-page{
+        #todo-page {
             visibility: visible;
         }
     }
@@ -250,6 +252,14 @@ a {
             text-overflow: ellipsis;
             background: #00bcd4;
             color: #FFF;
+            margin-top: -3px;
+        }
+    }
+    .item-date {
+        span {
+            font-size: 12px;
+            display: inline-block;
+            margin: 0 5px;
         }
     }
 }
@@ -292,7 +302,7 @@ a {
         box-shadow: 0 0 8px #828282;
         padding: 10px 20px;
     }
-    .todo__item-desc{
+    .todo__item-desc {
         width: 100%;
         height: 100px;
     }

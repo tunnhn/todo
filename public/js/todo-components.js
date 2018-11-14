@@ -261,8 +261,22 @@
 
                 return at !== -1 ? groups[at].color : '';
             },
+            getItemDate: function (date) {
+                if (date) {
+                    return moment(new Date(date)).format("YYYY-MM-DD HH:MM:SS")
+                }
+
+                return '';
+            },
             $: function (selector) {
                 return selector ? $(this.$el).find(selector) : $(this.$el);
+            },
+            _updateItemStatus: function (item) {
+                Todo.doAjax('update-todo-item-status/' + item._id, {
+                    status: item.status
+                }, 'post').then(function (r) {
+
+                });
             },
             _add: function (e) {
                 e.preventDefault();
