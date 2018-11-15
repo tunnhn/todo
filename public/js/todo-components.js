@@ -46,7 +46,7 @@
                 if (group !== false) {
                     setTimeout(function ($vm) {
                         $vm.$('.todo__group-name').focus();
-                    }, 100, this);
+                    }, 10, this);
                 }
             }
         },
@@ -200,7 +200,7 @@
                 if (item !== false) {
                     setTimeout(function ($vm) {
                         $vm.$('.todo__item-name').focus();
-                    }, 100, this);
+                    }, 10, this);
                 }
             }
         },

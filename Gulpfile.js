@@ -1,4 +1,5 @@
 // npm i express body-parse socket.io jsonwebtoken mongodb mongoose extend gulp gulp-sass wordpress-hash-node jsonwebtoken nodemon --save-dev
+// npm-run-all --parallel startn watch-jscss
 var gulp = require('gulp'),
     scss = require('gulp-sass');
 
