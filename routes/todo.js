@@ -1,25 +1,45 @@
 const express = require('express');
+const todoController = require('../controllers/todo');
 const todoGroupModel = require('../models/todo-group');
 const todoItemModel = require('../models/todo-item');
+let checkPermission = require('../modules/check-permission');
 
 module.exports = function (app) {
-    let router = express.Router();
-
-    router.get('/get-todo-data', async function (req, res) {
-        async function getData() {
-            let groups = await todoGroupModel.find().exec(),
-                items = await todoItemModel.find().exec();
-
-            return {
-                groups: groups,
-                items: items,
-                x: 0
+    let router = express.Router(),
+        permission = {
+            a: 0,
+            load: function (a) {
+                this.a = a;
+            },
+            check: function (req, res, next) {
+                console.log('This=', this, this.a)
+                next();
             }
         }
-
-        let data = await getData();
-        res.send(data)
+    app.use(function (req, res, next) {
+        ///permission = checkPermission(global.token);
+        ///console.log('Permission:', checkPermission);
+        //////router.get('/get-todo-data', permission, todoController.getData);
+        checkPermission.setToken(app.getRequest('token', 'todo'));//.load(12,34);
+        ///permission.check();
+        next();
     });
+
+    router.post('/update-todo-item-status/:id', checkPermission.cb(function (a, b, c) {
+        console.log('Verified');
+        c();
+    }), function (req, res, next) {
+        res.send('Cool')
+        ///next();
+    });
+
+    // router.post('/update-todo-item-status/:id', checkPermission.cb(function (a, b, c) {
+    //     console.log('Tu ba');
+    //     c();
+    // }), function (req, res) {
+    //     console.log('X', permission)
+    //     ///res.send('');
+    // });
 
     router.post('/add-todo-group', function (req, res) {
         let data = app.getRequest('group'),
@@ -118,9 +138,14 @@ module.exports = function (app) {
     });
 
     router.post('/update-todo-item-status/:id', function (req, res) {
-        todoItemModel.findById(app.getRequest('id'), function (err, item) {
+
+        console.log('id', app.getRequest('id'))
+
+        todoItemModel.findById(1234, function (err, item) {
+
+
             if (!item) {
-                return new Error('Could not load Document');
+                res.send('error')
             } else {
                 var status = app.getRequest('status');
                 item.status = status;
@@ -131,9 +156,11 @@ module.exports = function (app) {
                         res.send('success')
                 });
             }
-        });
-    });
 
+
+        });
+
+    });
 
     app.use('/', router);
 

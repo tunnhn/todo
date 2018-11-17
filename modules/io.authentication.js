@@ -5,7 +5,7 @@ exports = module.exports = function (io) {
 
         function verifyToken(token) {
             return new Promise(function (resolve, reject) {
-                jwt.verify(token, 'test', function (err, decode) {
+                jwt.verify(token, global.tokenKey, function (err, decode) {
                     err ? reject() : resolve(decode);
                 });
             })
@@ -38,7 +38,7 @@ exports = module.exports = function (io) {
                     let checked = hasher.CheckPassword(pwd, user.password);
                     if (checked) {
                         let u = {username: usr, email: user.email};
-                        u.token = jwt.sign(u, 'test');
+                        u.token = jwt.sign(u, global.tokenKey);
                         let response = {adminUser: u, todoData: await getData()};
                         socket.emit('logged in', response);
                     } else {

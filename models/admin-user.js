@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const db = require('../modules/mongodb');
+const Config = require('../modules/config')();
 
 const adminUser = new mongoose.Schema({
     username: {
@@ -18,10 +19,16 @@ const adminUser = new mongoose.Schema({
         require: true
     },
 
+    roles: {
+        type: Array,
+        require: true,
+        default: []
+    },
+
     created: {
         type: Date,
         default: Date.now
     }
 })
 
-module.exports = db().model('hackathon_dec_users', adminUser);
+module.exports = db().model(Config.get('collectionPrefix', 'DB') + 'users', adminUser);

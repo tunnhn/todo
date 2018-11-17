@@ -5,11 +5,12 @@ jQuery(function ($) {
     }
 
     window.Todo = $.extend({}, window.Todo, {
+        ajaxToken: '',
         doAjax: function (action, data, type, proxy) {
             return new Promise(function (resolve, reject) {
                 $.ajax({
                     url: 'http://localhost:3456/' + action,
-                    data: data || {},
+                    data: $.extend({token: Todo.ajaxToken}, data || {}),
                     type: type || 'get',
                     success: function (res) {
                         resolve.call(proxy, res);
@@ -94,6 +95,5 @@ jQuery(function ($) {
         }
     });
 
-    window.Todo.$todo = window.Todo.createApp();
 
 });

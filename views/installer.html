@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Toto Installer</title>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.0.1/vuex.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/installer.js"></script>
+
+</head>
+<body>
+<div id="todo-installer">
+    <p v-show="getMessage()" class="message" :class="getMessageClass()">{{getMessage()}}</p>
+
+    {{config}}
+    <p class="form-row">
+        <label>Mongo Database</label>
+        <input type="text" v-model="config.mongodb" name="mongodb">
+    </p>
+
+    <p class="form-row">
+        <label>Collection Prefix</label>
+        <input type="text" v-model="config.collectionPrefix" name="collection-prefix">
+    </p>
+
+
+    <p class="form-row">
+        <label>Admin User</label>
+        <input type="text" v-model="config.adminUser" name="admin-user">
+    </p>
+
+    <p class="form-row">
+        <label>Admin Password</label>
+        <input type="text" v-model="config.adminPassword" name="admin-password">
+    </p>
+
+    <p class="form-row">
+        <label>Admin Email</label>
+        <input type="text" v-model="config.adminEmail" name="admin-email">
+    </p>
+
+    <p class="form-row">
+        <button class="button" id="installer" @click="_install">Install</button>
+    </p>
+</div>
+</body>
+</html>

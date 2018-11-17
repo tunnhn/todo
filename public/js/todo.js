@@ -13,6 +13,7 @@
                         items: [],
                         groups: []
                     },
+                    currentTime: 0,
                     checkedLogin: true
                     //todoData: this.$todoStore()
                 }
@@ -47,6 +48,8 @@
                     } else {
                         $vm.checkedLogin = false;
                     }
+                }).on('heartbeat', function (time) {
+                    $vm.currentTime = time;
                 });
 
                 this.$().addClass('loaded');
@@ -66,6 +69,7 @@
                     this.checkedLogin = true;
                     this.adminUser = response.adminUser;
                     this.todoData = response.todoData;
+                    Todo.ajaxToken = response.adminUser.token;
                     window.Todo.dataStore = window.Todo.createTodoStore(response.todoData);
                 },
                 $: function (selector) {
@@ -109,4 +113,8 @@
     }
 
     window.Todo.createApp = createApp;
+
+    $(function () {
+        window.Todo.$todo = window.Todo.createApp();
+    })
 })(jQuery);
