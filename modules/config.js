@@ -16,7 +16,7 @@ let Config = function (configFile) {
 extend(Config.prototype, {
     get: function (name, group) {
 
-        if(name) {
+        if (name) {
             if (group) {
                 return this.config[group] ? this.config[group][name] : undefined;
             }
@@ -25,14 +25,27 @@ extend(Config.prototype, {
         }
         return this.config;
     },
+    set: function (name, value, group) {
+        if (!this.config[group]) {
+            this.config[group] = {};
+        }
+
+        this.config[group][name] = value;
+        fs.writeFileSync(this.configFile, ini.stringify(this.config));
+
+        return this;
+    },
+    getSection: function (name) {
+        return this.config[name] || {};
+    },
     reload: function () {
         if (fs.existsSync(this.configFile)) {
             this.config = ini.parse(fs.readFileSync(this.configFile, 'utf-8'));
-            console.log('Read INI')
-        }else{
-            console.log('INI not found')
+        } else {
             this.config = false;
         }
+
+        return this;
     }
 });
 

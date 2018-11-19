@@ -12,9 +12,13 @@ html, body {
   background: #F5F5F5;
   padding: 8px 12px;
   display: inline-block;
-  line-height: 1; }
+  line-height: 1;
+  outline: none;
+  box-shadow: none; }
 
 input[type="text"],
+input[type="email"],
+input[type="password"],
 select,
 textarea {
   padding: 5px;
@@ -26,13 +30,15 @@ textarea {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   height: 29px;
-  color: #999; }
+  color: #999;
+  width: 100%; }
 
 a {
   cursor: pointer; }
 
 .message {
-  margin: 0 0 10px 0; }
+  margin: 0 0 10px 0;
+  color: #00bcd4; }
   .message.error {
     color: #FF0000; }
 
@@ -51,9 +57,17 @@ a {
   .form-row label {
     display: block;
     margin-bottom: 10px;
-    font-weight: bold; }
+    font-weight: bold;
+    color: #666; }
   .form-row input[type="text"] {
     width: 100%; }
+
+.list-table {
+  list-style: none;
+  margin: 0 0 20px 0;
+  padding: 0; }
+  .list-table .list-item {
+    display: flex; }
 
 #header {
   height: 40px;
@@ -64,7 +78,8 @@ a {
     float: right;
     color: #FFF; }
 
-#todo-login {
+#todo-login,
+#todo-register {
   display: none;
   width: 400px;
   margin: 50px auto;
@@ -74,15 +89,18 @@ a {
 
 #header,
 #todo-login,
+#todo-register,
 #todo-page {
   visibility: hidden; }
 
 #todo-app.loaded #header,
 #todo-app.loaded #todo-login,
+#todo-app.loaded #todo-register,
 #todo-app.loaded #todo-page {
   visibility: visible; }
 
-#todo-app.loaded #todo-login {
+#todo-app.loaded #todo-login,
+#todo-app.loaded #todo-register {
   display: block; }
 
 #todo-page {
@@ -97,25 +115,28 @@ a {
   background: #ecfbff;
   border-right: 1px solid #DDD;
   overflow: auto; }
+  #sidebar .todo-menu {
+    list-style: none;
+    margin: 5px 0;
+    padding: 0; }
+    #sidebar .todo-menu .menu-item {
+      padding: 7px 10px;
+      font-size: 15px;
+      cursor: pointer; }
+      #sidebar .todo-menu .menu-item > * {
+        text-decoration: none;
+        color: #666; }
+      #sidebar .todo-menu .menu-item.active {
+        font-weight: bold; }
+      #sidebar .todo-menu .menu-item:hover {
+        background: #FFF; }
 
 #todo-list {
   flex: 1 1 0; }
 
-#todo-groups .list-groups {
-  list-style: none;
-  margin: 5px 0;
-  padding: 0; }
-  #todo-groups .list-groups .group {
-    padding: 7px 10px;
-    font-size: 15px;
-    cursor: pointer; }
-    #todo-groups .list-groups .group.active {
-      font-weight: bold; }
-    #todo-groups .list-groups .group:hover {
-      background: #FFF; }
-  #todo-groups .list-groups .add {
-    padding: 10px;
-    text-align: right; }
+#todo-groups .list-groups .add {
+  padding: 10px;
+  text-align: right; }
 
 #todo-list {
   overflow: auto; }

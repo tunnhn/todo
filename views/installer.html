@@ -3,47 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <title>Toto Installer</title>
+    <link rel="stylesheet" type="text/css" href="css/installer.css">
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.0.1/vuex.js"></script>
+    <script src="js/vendor/jquery.cookie.js"></script>
     <script src="js/script.js"></script>
     <script src="js/installer.js"></script>
-
 </head>
 <body>
 <div id="todo-installer">
+    <h3 class="welcome">Welcome to Todo Installer.</h3>
     <p v-show="getMessage()" class="message" :class="getMessageClass()">{{getMessage()}}</p>
+    <div v-show="status===''">
+        <ul class="installer__steps">
+            <li class="installer__step-database step" v-show="step === 'database'" data-step="database">
+                <p class="installer__step-heading">Enter your database connection information.</p>
+                <p class="form-row">
+                    <label>Mongo Database</label>
+                    <input type="text" v-model="config.mongodb" name="mongodb">
+                </p>
 
-    {{config}}
-    <p class="form-row">
-        <label>Mongo Database</label>
-        <input type="text" v-model="config.mongodb" name="mongodb">
-    </p>
+                <p class="form-row">
+                    <label>Collection Prefix</label>
+                    <input type="text" v-model="config.collectionPrefix" name="collection-prefix">
+                </p>
+            </li>
+            <li class="installer__step-admin-user step" v-show="step === 'admin-user'" data-step="admin-user">
+                <p class="installer__step-heading">Enter username and password for admin.</p>
+                <p class="form-row">
+                    <label>Admin User</label>
+                    <input type="text" v-model="config.adminUser" name="admin-user">
+                </p>
 
-    <p class="form-row">
-        <label>Collection Prefix</label>
-        <input type="text" v-model="config.collectionPrefix" name="collection-prefix">
-    </p>
+                <p class="form-row">
+                    <label>Admin Password</label>
+                    <input type="text" v-model="config.adminPassword" name="admin-password">
+                </p>
 
+                <p class="form-row">
+                    <label>Admin Email</label>
+                    <input type="text" v-model="config.adminEmail" name="admin-email">
+                </p>
+            </li>
+            <li class="installer__step-mailer step" v-show="step === 'mailer'" data-step="mailer">
+                <p class="installer__step-heading">Mailer service to support sending emails.</p>
+                <p class="form-row">
+                    <label>Mailer</label>
+                    <select v-model="config.MAILER.service">
+                        <option v-for="(mailer, index) in mailers" :value="index">{{mailer}}</option>
+                    </select>
+                </p>
 
-    <p class="form-row">
-        <label>Admin User</label>
-        <input type="text" v-model="config.adminUser" name="admin-user">
-    </p>
+                <p class="form-row" v-show="config.MAILER.service">
+                    <label>Email</label>
+                    <input type="email" v-model="config.MAILER.email" name="mailer-email">
+                </p>
 
-    <p class="form-row">
-        <label>Admin Password</label>
-        <input type="text" v-model="config.adminPassword" name="admin-password">
-    </p>
+                <p class="form-row" v-show="config.MAILER.service">
+                    <label>Password</label>
+                    <input type="password" v-model="config.MAILER.password" name="mailer-password">
+                </p>
+            </li>
+        </ul>
 
-    <p class="form-row">
-        <label>Admin Email</label>
-        <input type="text" v-model="config.adminEmail" name="admin-email">
-    </p>
-
-    <p class="form-row">
-        <button class="button" id="installer" @click="_install">Install</button>
-    </p>
+        <p class="form-row install-actions">
+            <button class="button prev" @click="_nav('back')" v-show="stepIndex > 0">Back</button>
+            <button class="button next" @click="_nav('next')" v-show="stepIndex < 2">Next</button>
+            <button class="button install" id="installer" @click="_install" v-show="stepIndex === 2">Install</button>
+        </p>
+    </div>
 </div>
 </body>
 </html>

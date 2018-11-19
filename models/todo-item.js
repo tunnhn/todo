@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const db = require('../modules/mongodb');
+const Config = require('../modules/config')();
 
 const todoItem = new mongoose.Schema({
     name: {
@@ -36,10 +37,15 @@ const todoItem = new mongoose.Schema({
         require: true
     },
 
+    assignees: {
+        type: Array,
+        default: []
+    },
+
     created: {
         type: Date,
         default: Date.now
     }
 })
 
-module.exports = db().model('todo_items', todoItem);
+module.exports = db().model(Config.get('collectionPrefix', 'DB') + 'items', todoItem);

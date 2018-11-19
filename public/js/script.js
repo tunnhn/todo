@@ -1,4 +1,4 @@
-jQuery(function ($) {
+(function ($) {
 
     if (window.Todo === undefined) {
         window.Todo = {};
@@ -92,8 +92,63 @@ jQuery(function ($) {
                 event.synthetic = true;
                 node.fireEvent("on" + eventName, event);
             }
+        },
+        validateEmail: function (email) {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        },
+        debounce: function (func, wait, immediate) {
+            var timeout, args, context, timestamp, result;
+            if (null == wait) wait = 100;
+
+            function later() {
+                var last = Date.now() - timestamp;
+
+                if (last < wait && last >= 0) {
+                    timeout = setTimeout(later, wait - last);
+                } else {
+                    timeout = null;
+                    if (!immediate) {
+                        result = func.apply(context, args);
+                        context = args = null;
+                    }
+                }
+            };
+
+            var debounced = function () {
+                context = this;
+                args = arguments;
+                timestamp = Date.now();
+                var callNow = immediate && !timeout;
+                if (!timeout) timeout = setTimeout(later, wait);
+                if (callNow) {
+                    result = func.apply(context, args);
+                    context = args = null;
+                }
+
+                return result;
+            };
+
+            debounced.clear = function () {
+                if (timeout) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                }
+            };
+
+            debounced.flush = function () {
+                if (timeout) {
+                    result = func.apply(context, args);
+                    context = args = null;
+
+                    clearTimeout(timeout);
+                    timeout = null;
+                }
+            };
+
+            return debounced;
         }
     });
 
 
-});
+})(jQuery);

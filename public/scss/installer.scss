@@ -1,0 +1,32 @@
+@import "general";
+
+#todo-installer {
+    width: 600px;
+    max-width: 90%;
+    margin: 50px auto;
+    background: #F5F5F5;
+    padding: 10px 20px;
+    border: 1px solid #DDD;
+    @include border-radius();
+    .welcome {
+        font-size: 18px;
+    }
+    .installer__steps {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .step {
+        .installer__step-heading {
+            font-size: 16px;
+        }
+    }
+
+    .install-actions{
+        .next, .install {
+            float: right;
+        }
+
+        @include clearfix();
+    }
+}

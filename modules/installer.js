@@ -75,6 +75,17 @@ extend(Installer.prototype, {
         configData.DB.adminUser = this.config.adminUser;
         configData.DB.adminEmail = this.config.adminEmail;
 
+        if (this.config.MAILER) {
+            if (!configData.MAILER) {
+                configData.MAILER = {};
+            }
+
+            for (var i in this.config.MAILER) {
+                if (this.config.MAILER.hasOwnProperty(i)) {
+                    configData.MAILER[i] = this.config.MAILER[i];
+                }
+            }
+        }
         fs.writeFileSync(Config.configFile, ini.stringify(configData));
 
         Config.reload();
@@ -89,7 +100,8 @@ extend(Installer.prototype, {
             userData = {
                 username: this.config.adminUser,
                 password: generatePassword(this.config.adminPassword),
-                email: this.config.adminEmail
+                email: this.config.adminEmail,
+                roles: ['administrator']
             };
 
 

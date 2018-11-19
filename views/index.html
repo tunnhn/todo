@@ -16,10 +16,10 @@
     <script src="js/vendor/moment.js"></script>
     <script src="colorpicker/js/colorpicker.js"></script>
     <script src="datetimepicker/jquery.datetimepicker.full.js"></script>
+    <script src="js/script.js"></script>
     <script src="js/todo-store.js"></script>
     <script src="js/todo-components.js"></script>
     <script src="js/todo.js"></script>
-    <script src="js/script.js"></script>
 </head>
 <body>
 <div id="todo-app">
@@ -29,42 +29,94 @@
                 @click="_logout($event)">Logout</a></span>
     </div>
     <div id="content">
+
         <authentication inline-template :admin-user="adminUser" v-if="!adminUser && !checkedLogin"
                         @update-admin-user="_updateAdminUser">
-            <div id="todo-login">
-                <p v-show="errorMsg" class="message error">{{errorMsg}}</p>
-                <p class="form-row">
-                    <label>Username</label>
-                    <input type="text" v-model="loginAuth.usr" value="admin" @keyup="_maybeLogin($event)">
-                </p>
+            <div>
+                <div id="todo-login" v-show="screen==='login'">
+                    <p v-show="getMessage()" class="message" :class="getMessageClass()">{{getMessage()}}</p>
 
-                <p class="form-row">
-                    <label>Password</label>
-                    <input type="text" v-model="loginAuth.pwd" value="admin" @keyup="_maybeLogin($event)">
-                </p>
+                    <p class="form-row">
+                        <label>Username</label>
+                        <input type="text" v-model="loginAuth.usr" value="admin" @keyup="_maybeLogin($event)">
+                    </p>
 
-                <p class="form-row">
-                    <button class="button" @click="_login">Login</button>
-                </p>
+                    <p class="form-row">
+                        <label>Password</label>
+                        <input type="text" v-model="loginAuth.pwd" value="admin" @keyup="_maybeLogin($event)">
+                    </p>
+
+                    <div class="form-row">
+                        <button class="button" @click="_login">Login</button>
+                        <p>Don't have account? <a href="" @click="_showForm($event, 'register');">Register</a></p>
+                    </div>
+                </div>
+                <div id="todo-register" v-show="screen==='register'">
+                    <p v-show="getMessage()" class="message" :class="getMessageClass()">{{getMessage()}}</p>
+
+                    <p class="form-row">
+                        <label>First Name</label>
+                        <input type="text" v-model="registerAccount.firstName" name="reg-firstName" value=""
+                               @keyup="_maybeRegister($event)">
+                    </p>
+
+                    <p class="form-row">
+                        <label>Last Name</label>
+                        <input type="text" v-model="registerAccount.lastName" name="reg-lastName" value=""
+                               @keyup="_maybeRegister($event)">
+                    </p>
+
+                    <p class="form-row">
+                        <label>Email</label>
+                        <input type="text" v-model="registerAccount.email" name="reg-email" value=""
+                               @keyup="_maybeRegister($event)">
+                    </p>
+
+                    <p class="form-row">
+                        <label>Username</label>
+                        <input type="text" v-model="registerAccount.username" name="reg-username" value=""
+                               @keyup="_maybeRegister($event)">
+                    </p>
+
+                    <p class="form-row">
+                        <label>Password</label>
+                        <input type="text" v-model="registerAccount.password" name="reg-password" value=""
+                               @keyup="_maybeRegister($event)">
+                    </p>
+
+                    <div class="form-row">
+                        <button class="button" @click="_register">Register</button>
+                        <p>Have an account? <a href="" @click="_showForm($event, 'login')">Login</a></p>
+                    </div>
+                </div>
             </div>
         </authentication>
 
+
         <div id="todo-page" v-if="adminUser !== false">
             <div id="sidebar" v-if="adminUser !== false">
-
+                <div id="todo-menu">
+                    <ul class="todo-menu">
+                        <li class="menu-item" :class="[currentPage === 'users' ? 'active' : '']">
+                            <a href="" v-show="isAdmin()" @click="_showPage($event, 'users');">Users
+                                ({{countUsers()}})</a>
+                        </li>
+                    </ul>
+                </div>
                 <todo-groups :todo-data="todoData" inline-template @select-group="_selectGroup"
-                             :selected-group="selectedGroup">
+                             :selected-group="selectedGroup" :admin-user="adminUser">
                     <div id="todo-groups">
-                        <ul class="list-groups">
-                            <li class="group" @click="_select($event, -1)" :class="selectedGroup == -1 ? 'active' : ''">
-                                All
-                                ({{countItems(-1)}})
+                        <ul class="list-groups todo-menu">
+                            <li class="group menu-item" @click="_select($event, -1)"
+                                :class="selectedGroup == -1 ? 'active' : ''">
+                                <span>All ({{countItems(-1)}})</span>
                             </li>
-                            <li v-show="countItems('') > 0" class="group" @click="_select($event, '')"
-                                :class="selectedGroup == '' ? 'active' : ''">No group
-                                ({{countItems('')}})
+                            <li v-show="countItems('') > 0" class="group menu-item" @click="_select($event, '')"
+                                :class="selectedGroup == '' ? 'active' : ''">
+                                <span>No group ({{countItems('')}})</span>
                             </li>
-                            <li class="group" v-for="(group, index) in todoGroups" @click="_select($event, group._id)"
+                            <li class="group menu-item" v-for="(group, index) in todoGroups"
+                                @click="_select($event, group._id)"
                                 class="group"
                                 :class="groupClass(group)">
                                 <div class="group-name">{{group.name}} ({{countItems(group._id)}})</div>
@@ -77,7 +129,6 @@
                                 <a class="button" @click="_add($event)">Add Group</a>
                             </li>
                         </ul>
-
                         <div id="group__add-form" v-show="group!==false">
                             <div class="form-window">
                                 <p v-if="errorMsg" class="message error">{{errorMsg}}</p>
@@ -100,7 +151,23 @@
 
             </div>
 
-            <todo-items v-if="adminUser !== false" :todo-data="todoData" inline-template :selected-group="selectedGroup"
+            <todo-users v-if="adminUser !== false && currentPage==='users'" :todo-data="todoData" inline-template>
+                <div id="todo-users">
+                    <ul class="browse-users list-table">
+                        <template>
+                            <li v-for="(user, index) in todoData.users" class="list-item">
+                                <div>{{getUserNiceName(user)}}</div>
+                                <div class="actions">
+                                    <a href="">Delete</a>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </todo-users>
+
+            <todo-items v-if="adminUser !== false && currentPage==='todo-items'" :todo-data="todoData" inline-template
+                        :selected-group="selectedGroup" :admin-user="adminUser"
                         @select-group="_selectGroup">
                 <div id="todo-list">
                     <div id="list-actions">
@@ -111,7 +178,8 @@
                             <li class="item" v-for="(item, index) in getCachedItems()">
                                 <div class="item-name">
                                     <label>
-                                        <input type="checkbox" v-model="item.status" true-value="completed" false-value="" @change="_updateItemStatus(item)">
+                                        <input type="checkbox" v-model="item.status" true-value="completed"
+                                               false-value="" @change="_updateItemStatus(item)">
                                     </label>
                                     {{item.name}}
                                 </div>
@@ -130,6 +198,14 @@
 
                         <li v-else class="item">No items</li>
                     </ul>
+                    <todo-group-users :group="getGroupSelected()" inline-template>
+                        <div class="">
+                            <h4>Assignee</h4>
+                            <ul>
+                                <li v-for="(assignee, index) in getAssignees()">{{assignee.username}}</li>
+                            </ul>
+                        </div>
+                    </todo-group-users>
                     <div v-show="item!==false" id="form-add-todo">
                         <div class="form-window">
                             <p v-show="errorMsg" class="message error">{{errorMsg}}</p>

@@ -11,6 +11,9 @@
             },
             items: function (state) {
                 return state.items || [];
+            },
+            users: function (state) {
+                return state.users;
             }
         };
 
@@ -68,6 +71,9 @@
                     Vue.set(state.items, at, item);
                 }
             },
+            addUser: function (state, user) {
+                state.users.push(user)
+            }
         };
 
         var actions = {};
@@ -80,6 +86,7 @@
         });
     }
 
+    console.log(window.Todo)
     if (window.Todo === undefined) {
         window.Todo = {};
     }

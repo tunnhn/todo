@@ -7,12 +7,11 @@ let thisToken = 0,
             thisKey = key;
         },
         check: async function (resolve, reject) {
-            console.log(thisToken || global.token, thisKey || global.tokenKey)
             jwt.verify(thisToken || global.token, thisKey || global.tokenKey, function (err, decode) {
                 if (err) {
-                    return reject(err);
+                    return reject && reject(err);
                 }
-                resolve(decode)
+                resolve && resolve(decode)
             });
 
         },

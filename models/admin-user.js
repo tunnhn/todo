@@ -29,6 +29,6 @@ const adminUser = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-})
-
+});
+console.log("Prefix = ", Config.get('collectionPrefix', 'DB'))
 module.exports = db().model(Config.get('collectionPrefix', 'DB') + 'users', adminUser);

@@ -1,69 +1,4 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    color: #444;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-    font-size: 13px;
-    line-height: 1.4em;
-}
-
-.button {
-    border: 1px solid #DDD;
-    border-radius: 3px;
-    background: #F5F5F5;
-    padding: 8px 12px;
-    display: inline-block;
-    line-height: 1;
-}
-
-input[type="text"],
-select,
-textarea {
-    padding: 5px;
-    border-radius: 4px;
-    background: #FFF;
-    border: 1px solid #DDD;
-    font-size: 14px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    height: 29px;
-    color: #999;
-}
-
-a {
-    cursor: pointer;
-}
-
-.message {
-    margin: 0 0 10px 0;
-    &.error {
-        color: #FF0000;
-    }
-}
-
-.todo__label {
-    display: inline-block;
-    font-size: 11px;
-    background: #DDD;
-    border-radius: 3px;
-    padding: 0px 5px;
-    line-height: 21px;
-    vertical-align: middle;
-    height: 21px;
-}
-
-.form-row {
-    margin: 0 0 10px 0;
-    label {
-        display: block;
-        margin-bottom: 10px;
-        font-weight: bold;
-    }
-    input[type="text"] {
-        width: 100%;
-    }
-}
+@import "general";
 
 #todo-app {
 
@@ -80,7 +15,8 @@ a {
     }
 }
 
-#todo-login {
+#todo-login,
+#todo-register {
     display: none;
     width: 400px;
     margin: 50px auto;
@@ -91,6 +27,7 @@ a {
 
 #header,
 #todo-login,
+#todo-register,
 #todo-page {
     visibility: hidden;
 }
@@ -99,6 +36,7 @@ a {
     &.loaded {
         #header,
         #todo-login,
+        #todo-register,
         #todo-page {
             visibility: visible;
         }
@@ -107,7 +45,8 @@ a {
 
 #todo-app {
     &.loaded {
-        #todo-login {
+        #todo-login,
+        #todo-register {
             display: block;
         }
     }
@@ -126,6 +65,26 @@ a {
     background: #ecfbff;
     border-right: 1px solid #DDD;
     overflow: auto;
+    .todo-menu {
+        list-style: none;
+        margin: 5px 0;
+        padding: 0;
+        .menu-item {
+            padding: 7px 10px;
+            font-size: 15px;
+            cursor: pointer;
+            > * {
+                text-decoration: none;
+                color: #666;
+            }
+            &.active {
+                font-weight: bold;
+            }
+            &:hover {
+                background: #FFF;
+            }
+        }
+    }
 }
 
 #todo-list {
@@ -134,20 +93,7 @@ a {
 
 #todo-groups {
     .list-groups {
-        list-style: none;
-        margin: 5px 0;
-        padding: 0;
-        .group {
-            padding: 7px 10px;
-            font-size: 15px;
-            cursor: pointer;
-            &.active {
-                font-weight: bold;
-            }
-            &:hover {
-                background: #FFF;
-            }
-        }
+
         .add {
             padding: 10px;
             text-align: right;

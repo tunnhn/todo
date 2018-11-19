@@ -2,54 +2,37 @@ const express = require('express');
 const todoController = require('../controllers/todo');
 const todoGroupModel = require('../models/todo-group');
 const todoItemModel = require('../models/todo-item');
+const todoUserModel = require('../models/user');
 let checkPermission = require('../modules/check-permission');
 
 module.exports = function (app) {
     let router = express.Router(),
-        permission = {
-            a: 0,
-            load: function (a) {
-                this.a = a;
-            },
-            check: function (req, res, next) {
-                console.log('This=', this, this.a)
-                next();
-            }
-        }
-    app.use(function (req, res, next) {
-        ///permission = checkPermission(global.token);
-        ///console.log('Permission:', checkPermission);
-        //////router.get('/get-todo-data', permission, todoController.getData);
-        checkPermission.setToken(app.getRequest('token', 'todo'));//.load(12,34);
-        ///permission.check();
+        currentUser = false;
+
+    router.use(async function (req, res, next) {
+        checkPermission.setToken(app.getRequest('token'), 'todo');
+
+        let currentUser = await checkPermission.check(function () {
+
+        });
+
+        console.log(currentUser);
         next();
     });
 
-    router.post('/update-todo-item-status/:id', checkPermission.cb(function (a, b, c) {
-        console.log('Verified');
-        c();
-    }), function (req, res, next) {
-        res.send('Cool')
-        ///next();
-    });
-
-    // router.post('/update-todo-item-status/:id', checkPermission.cb(function (a, b, c) {
-    //     console.log('Tu ba');
-    //     c();
-    // }), function (req, res) {
-    //     console.log('X', permission)
-    //     ///res.send('');
-    // });
-
-    router.post('/add-todo-group', function (req, res) {
+    router.post('/add-todo-group', checkPermission.cb(), function (req, res) {
         let data = app.getRequest('group'),
             group = new todoGroupModel(data);
+
+        console.log(group);
         group.save().then(function (r) {
             res.send(r);
+        }, function () {
+            console.log('error')
         });
     });
 
-    router.post('/add-todo-item', function (req, res) {
+    router.post('/add-todo-item', checkPermission.cb(), function (req, res) {
         let data = app.getRequest('item'),
             item = new todoItemModel(data);
         item.save().then(function (r) {
@@ -57,7 +40,7 @@ module.exports = function (app) {
         });
     });
 
-    router.get('/remove-todo-group/:group', function (req, res) {
+    router.get('/remove-todo-group/:group', checkPermission.cb(), function (req, res) {
         let group = app.getRequest('group'),
             removeItems = JSON.parse(app.getRequest('removeItems')),
             removeGroup = function () {
@@ -81,7 +64,7 @@ module.exports = function (app) {
         }
     });
 
-    router.get('/remove-todo-item/:item', function (req, res) {
+    router.get('/remove-todo-item/:item', checkPermission.cb(), function (req, res) {
         let item = app.getRequest('item');
 
         // Remove items in group being removed and then remove the group
@@ -91,7 +74,7 @@ module.exports = function (app) {
 
     });
 
-    router.post('/update-todo-group/:id', function (req, res) {
+    router.post('/update-todo-group/:id', checkPermission.cb(), function (req, res) {
         todoGroupModel.findById(app.getRequest('id'), function (err, group) {
             if (!group) {
                 return new Error('Could not load Document');
@@ -114,7 +97,7 @@ module.exports = function (app) {
         });
     });
 
-    router.post('/update-todo-item/:id', function (req, res) {
+    router.post('/update-todo-item/:id', checkPermission.cb(), function (req, res) {
         todoItemModel.findById(app.getRequest('id'), function (err, item) {
             if (!item) {
                 return new Error('Could not load Document');
@@ -137,13 +120,9 @@ module.exports = function (app) {
         });
     });
 
-    router.post('/update-todo-item-status/:id', function (req, res) {
+    router.post('/update-todo-item-status/:id', checkPermission.cb(), function (req, res) {
 
-        console.log('id', app.getRequest('id'))
-
-        todoItemModel.findById(1234, function (err, item) {
-
-
+        todoItemModel.findById(app.getRequest('id'), function (err, item) {
             if (!item) {
                 res.send('error')
             } else {
@@ -156,8 +135,6 @@ module.exports = function (app) {
                         res.send('success')
                 });
             }
-
-
         });
 
     });

@@ -11,11 +11,14 @@
                     selectedGroup: -1,
                     defaultTodoData: {
                         items: [],
-                        groups: []
+                        groups: [],
+                        users: [{
+                            name: 'Nguyen Ngox Tu'
+                        }]
                     },
                     currentTime: 0,
-                    checkedLogin: true
-                    //todoData: this.$todoStore()
+                    checkedLogin: true,
+                    currentPage: 'todo-items'
                 }
             },
             computed: {
@@ -43,6 +46,7 @@
                 }).on('login failed', function (msg) {
                     $vm.errorMsg = msg || 'Login failed';
                 }).on('token-authorized', function (response) {
+                    console.log(response)
                     if ($.isPlainObject(response)) {
                         $vm.setData(response);
                     } else {
@@ -50,10 +54,12 @@
                     }
                 }).on('heartbeat', function (time) {
                     $vm.currentTime = time;
-                });
+                })
+                //.on('new user', function (r) {
+                //     Todo.dataStore.commit('addUser', r)
+                // });
 
                 this.$().addClass('loaded');
-
             },
             methods: {
                 load: function () {
@@ -63,14 +69,24 @@
                     } else {
                         this.checkedLogin = false;
                     }
+
+
                 },
                 setData: function (response) {
                     this.loaded = true;
                     this.checkedLogin = true;
                     this.adminUser = response.adminUser;
-                    this.todoData = response.todoData;
+                    this.todoData = $.extend({}, this.todoData, response.todoData);
                     Todo.ajaxToken = response.adminUser.token;
                     window.Todo.dataStore = window.Todo.createTodoStore(response.todoData);
+                },
+                countUsers: function () {
+                    return (Todo.dataStore.getters['all'].users || []).length;
+                },
+                isAdmin: function () {
+                    return this.adminUser && this.adminUser.roles && this.adminUser.roles.find(function (r) {
+                            return r === 'administrator';
+                        })
                 },
                 $: function (selector) {
                     return selector ? $(this.$el).find(selector) : $(this.$el);
@@ -85,7 +101,12 @@
                     $.cookie('todo-authorized-token', '');
                 },
                 _selectGroup: function (group) {
-                    this.selectedGroup = group
+                    this.selectedGroup = group;
+                    this.currentPage = 'todo-items';
+                },
+                _showPage: function (e, page) {
+                    e.preventDefault();
+                    this.currentPage = page;
                 },
                 $todoStore: function (prop, value) {
                     var $store = window.Todo.dataStore;
