@@ -22,6 +22,17 @@ function Installer(app) {
             await self.createCollections(connection);
             self.createConfigFile();
             let user = await self.createAdminUser();
+
+            let mailer = require('../modules/mailer')({
+                to: user.email,
+                subject: 'Welcome to Todo',
+                html: 'You have installed to Todo successful.'
+            }).send().then(function () {
+                console.log('Sent')
+            }, function (error) {
+                console.log('Send mail error:', error)
+            });
+
             res.send({message: 'Todo installed successful!', user: user});
         }, function () {
             console.log('error error')
