@@ -3,11 +3,12 @@ const todoController = require('../controllers/todo');
 const todoUserModel = require('../models/user');
 let checkPermission = require('../modules/check-permission');
 const Config = require('../modules/config')();
-
+let hasher = require('wordpress-hash-node');
 function generatePassword(password) {
-    let hasher = require('wordpress-hash-node');
+
     return hasher.HashPassword(password);
 }
+
 
 module.exports = function (app) {
     let router = express.Router(),
@@ -28,21 +29,27 @@ module.exports = function (app) {
     router.post('/register', function (req, res, next) {
         let userData = req.getRequest('user'),
             user = new todoUserModel(userData);
+        todoUserModel.findOne({$or: [{username: user.username}, {email: user.email}]}, function (r, existsUser) {
 
-        user.password = generatePassword(user.password);
-        user.save().then(function (r) {
-            let mailer = require('../modules/mailer')({
-                to: user.email,
-                subject: 'Welcome to Todo',
-                html: 'You have registered to Todo successful.'
-            }).send().then(function () {
-                console.log('Sent')
-            }, function (error) {
-                console.log('Send mail error:', error)
-            });
+            if (existsUser) {
+                res.send({error: 'User or email exists'});
+            } else {
+                user.password = generatePassword(user.password);
+                user.save().then(function (r) {
+                    let mailer = require('../modules/mailer')({
+                        to: user.email,
+                        subject: 'Welcome to Todo',
+                        html: 'You have registered to Todo successful.'
+                    }).send().then(function () {
+                        console.log('Sent')
+                    }, function (error) {
+                        console.log('Send mail error:', error)
+                    });
 
-            app.io.emit('new user', r);
-            res.send(r);
+                    app.io.emit('new user', r);
+                    res.send(r);
+                });
+            }
         });
     });
 
@@ -59,6 +66,16 @@ module.exports = function (app) {
             }
             res.send(json);
         });
+    });
+
+    router.get('/remove-user/:user', checkPermission.cb('administrator'), function (req, res) {
+        let user = app.getRequest('user');
+
+        // Remove items in group being removed and then remove the group
+        todoUserModel.remove({_id: user}).then(function () {
+            res.send({user: user})
+        })
+
     });
 
     app.use(router);

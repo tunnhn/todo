@@ -1,0 +1,47 @@
+<todo-items v-if="adminUser !== false && currentPage==='todo-items'" :todo-data="todoData" inline-template
+            :selected-group="selectedGroup" :admin-user="adminUser"
+            @select-group="_selectGroup">
+    <div id="todo-list">
+        <div id="list-actions">
+            <a class="button" @click="_add($event)">Add Todo</a>
+        </div>
+        <ul class="browse-items">
+            <template v-if="getActiveGroupItems().length">
+                <li class="item" :class="[selectedItem && selectedItem._id === item._id ? 'active' : '']" v-for="(item, index) in getCachedItems()" @click="_selectItem($event, item)">
+                    <div class="item-name">
+                        <label>
+                            <input type="checkbox" v-model="item.status" true-value="completed"
+                                   false-value="" @change="_updateItemStatus(item)">
+                        </label>
+                        {{item.name}}
+                    </div>
+                    <div class="item-date">
+                        <span v-if="getItemDate(item.expiredDate)">{{getItemDate(item.expiredDate)}}</span>
+                    </div>
+                    <div class="item-group">
+                        <span class="todo__label" :style="{'background-color': getGroupColor(item.group)}">{{getGroupName(item.group)}}</span>
+                    </div>
+                    <div class="item-actions">
+                        <a class="edit" @click="_edit($event, item)"></a>
+                        <a class="remove" @click="_remove($event, item._id)"></a>
+                    </div>
+                </li>
+            </template>
+
+            <li v-else class="item">No items</li>
+        </ul>
+        <!-- todo-item-users -->
+        <%- components.todoItemUsers %>
+        <%- components.todoComments %>
+        <todo-group-users v-show="false" :group="getGroupSelected()" inline-template>
+            <div class="">
+                <h4>Assignee</h4>
+                <ul>
+                    <li v-for="(assignee, index) in getAssignees()">{{assignee.username}}</li>
+                </ul>
+            </div>
+        </todo-group-users>
+        <!-- todo-edit-form -->
+        <%- components.todoEditForm %>
+    </div>
+</todo-items>

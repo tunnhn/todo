@@ -1,0 +1,29 @@
+<div v-show="item!==false" id="form-add-todo">
+    <div class="form-window">
+        <p v-show="errorMsg" class="message error">{{errorMsg}}</p>
+        <p class="form-row">
+            <label>Name</label>
+            <input type="text" v-model="item.name" class="todo__item-name">
+        </p>
+        <p class="form-row">
+            <label>Desc.</label>
+            <textarea v-model="item.desc" class="todo__item-desc"></textarea>
+        </p>
+        <p class="form-row">
+            <label>Time</label>
+            <input type="text" v-model="item.expiredDate" class="item-expired-date">
+        </p>
+        <p class="form-row">
+            <label>Group</label>
+            <select v-model="item.group">
+                <option value="">No group</option>
+                <option v-for="(group, index) in todoGroups" :value="group._id">{{group.name}}
+                </option>
+            </select>
+        </p>
+        <p class="form-row">
+            <button class="button" @click="_save($event)">Save</button>
+            <button class="button" @click="_cancel($event)">Cancel</button>
+        </p>
+    </div>
+</div>

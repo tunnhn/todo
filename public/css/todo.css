@@ -62,12 +62,47 @@ a {
   .form-row input[type="text"] {
     width: 100%; }
 
-.list-table {
+.block-heading {
+  margin: 0 0 20px 0; }
+
+.block {
+  padding: 20px; }
+
+.browse-items {
   list-style: none;
   margin: 0 0 20px 0;
-  padding: 0; }
-  .list-table .list-item {
-    display: flex; }
+  padding: 0;
+  position: relative;
+  border-top: 1px solid #EEE; }
+  .browse-items .item {
+    display: flex;
+    padding: 0 10px;
+    border-bottom: 1px solid #EEE;
+    height: 35px;
+    line-height: 35px;
+    cursor: pointer;
+    position: relative; }
+    .browse-items .item .item__user-avatar {
+      display: inline-block;
+      width: 25px;
+      height: 25px;
+      vertical-align: middle;
+      border-radius: 50%;
+      margin: 5px 10px 0 0;
+      background: #DDD;
+      text-align: center;
+      line-height: 25px;
+      color: #FFF; }
+    .browse-items .item.active:before {
+      background: #92f3ff;
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 0;
+      opacity: 0.1; }
 
 #header {
   height: 40px;
@@ -131,8 +166,10 @@ a {
       #sidebar .todo-menu .menu-item:hover {
         background: #FFF; }
 
-#todo-list {
-  flex: 1 1 0; }
+#todo-list,
+#todo-users {
+  flex: 1 1 0;
+  overflow: auto; }
 
 #todo-groups .list-groups .add {
   padding: 10px;
@@ -146,7 +183,6 @@ a {
     line-height: 30px; }
   #todo-list .browse-items {
     list-style: none;
-    margin: 0;
     padding: 0;
     border-top: 1px solid #EEE; }
     #todo-list .browse-items .item {
@@ -254,3 +290,10 @@ a {
   #form-add-todo .todo__item-desc {
     width: 100%;
     height: 100px; }
+
+.browse-item-users .search-users [name="add-user"] {
+  width: 200px;
+  vertical-align: middle; }
+
+.todo-post-comment textarea {
+  height: 100px; }

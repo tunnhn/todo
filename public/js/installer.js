@@ -6,7 +6,7 @@
             return {
                 message: false,
                 config: {
-                    mongodb: 'mongodb://admin:admin1234@ds241493.mlab.com:41493/nodejs',
+                    mongodb: 'mongodb://admin:admin1234@ds143717.mlab.com:43717/todo',
                     adminUser: 'admin',
                     adminPassword: 'admin',
                     adminEmail: 'tunnhn@gmail.com',
@@ -196,7 +196,7 @@
                     if (r.message) {
                         $vm.message = {content: r.message, type: 'success'};
                         setTimeout(function () {
-                            window.location.href = window.location.href;
+                            window.location.href = todoConfig.rootUrl;
                         }, 3000);
                     } else if (r.errorMsg) {
                         $vm.message = {content: r.errorMsg, type: 'error'};

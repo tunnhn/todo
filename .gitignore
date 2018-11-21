@@ -1,4 +1,5 @@
 node_modules/
 .idea/
 todo-config.ini
+todo-config.bk.ini
 todo-config.bak.ini

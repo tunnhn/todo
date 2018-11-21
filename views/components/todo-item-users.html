@@ -1,0 +1,19 @@
+<todo-item-users v-show="selectedItem !== false" :item="selectedItem" inline-template>
+    <div class="browse-item-users block">
+        <h4 class="block-heading">Assignees</h4>
+        <ul class="browse-items todo-assignees">
+            <li class="item assignee" v-for="(assignee, index) in item.assignees">
+                <span class="item__user-avatar">{{getUserAvatar(assignee.username)}}</span>
+                {{getAssigneeName(assignee)}}
+            </li>
+        </ul>
+
+        <div class="search-users">
+            <div class="form-row">
+                <p v-show="message">{{message}}</p>
+                <input type="text" name="add-user" @keypress="_maybeAdd($event)" v-model="username">
+                <button class="button" @click="_add">Add</button>
+            </div>
+        </div>
+    </div>
+</todo-item-users>

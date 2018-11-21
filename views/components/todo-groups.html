@@ -1,0 +1,45 @@
+<todo-groups :todo-data="todoData" inline-template @select-group="_selectGroup"
+             :selected-group="selectedGroup" :admin-user="adminUser">
+    <div id="todo-groups">
+        <ul class="list-groups todo-menu">
+            <li class="group menu-item" @click="_select($event, -1)"
+                :class="selectedGroup == -1 ? 'active' : ''">
+                <span>All ({{countItems(-1)}})</span>
+            </li>
+            <li v-show="countItems('') > 0" class="group menu-item" @click="_select($event, '')"
+                :class="selectedGroup == '' ? 'active' : ''">
+                <span>No group ({{countItems('')}})</span>
+            </li>
+            <li class="group menu-item" v-for="(group, index) in todoGroups"
+                @click="_select($event, group._id)"
+                class="group"
+                :class="groupClass(group)">
+                <div class="group-name">{{group.name}} ({{countItems(group._id)}})</div>
+                <div class="group-actions">
+                    <a class="edit" @click="_edit($event, group)"></a>
+                    <a class="remove" @click="_remove($event, group._id)"></a>
+                </div>
+            </li>
+            <li class="add" v-show="group===false">
+                <a class="button" @click="_add($event)">Add Group</a>
+            </li>
+        </ul>
+        <div id="group__add-form" v-show="group!==false">
+            <div class="form-window">
+                <p v-if="errorMsg" class="message error">{{errorMsg}}</p>
+                <p class="form-row">
+                    <label>Group name</label>
+                    <input type="text" class="todo__group-name" v-model="group.name">
+                </p>
+                <p class="form-row">
+                    <label>Color</label>
+                    <input type="text" class="todo__group-color color" v-model="group.color">
+                </p>
+                <p class="form-row">
+                    <a class="button" @click="_save($event)">Save</a>
+                    <a class="button" @click="_cancel($event)">Cancel</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</todo-groups>

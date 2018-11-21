@@ -1,0 +1,22 @@
+<todo-comments v-show="haveAssignees()" inline-template :item="selectedItem">
+    <div class="todo-item-comments block">
+        <div class="todo-browse-comments" v-show="comments.length">
+            <h4 class="block-heading">{{comments.length}} Comments</h4>
+            <ul class="browse-items todo-comments">
+                <li class="item comment" v-for="(comment, index) in comments">
+                    <span class="item__user-avatar">{{getUserAvatar(comment.user.username)}}</span>
+                    {{comment.content}}
+                </li>
+            </ul>
+        </div>
+        <div class="todo-post-comment">
+            <div class="form-row">
+                <label>Comment</label>
+                <textarea v-model="newComment.content"></textarea>
+            </div>
+            <div class="form-row">
+                <button class="button" @click="_addComment">Submit</button>
+            </div>
+        </div>
+    </div>
+</todo-comments>

@@ -1,7 +1,12 @@
 const jwt = require('jsonwebtoken');
+const todoGroupModel = require('../models/todo-group');
+const todoItemModel = require('../models/todo-item');
+const todoUserModel = require('../models/admin-user');
 
 exports = module.exports = function (io) {
     io.on('connection', socket => {
+
+        //console.log(socket);
         let AdminUser = require('../models/admin-user');
 
         function verifyToken(token) {
@@ -24,22 +29,27 @@ exports = module.exports = function (io) {
             }]
         }
 
-        async function getData(user) {
+        async function getAssignees(users) {
+            return await todoUserModel.find({_id: {$in: users}}).exec();
+        }
 
-            console.log(user)
-            const todoGroupModel = require('../models/todo-group');
-            const todoItemModel = require('../models/todo-item');
-            const todoUserModel = require('../models/admin-user');
+        async function getData(user) {
 
             let dataFields = {
                 'groups': todoGroupModel.find({user: user._id}),
-                'items': todoItemModel.find({user: user._id})
+                'items': todoItemModel.find({
+                    $or: [{
+                        user: user._id
+                    }, {
+                        assignees: {$in: user._id}
+                    }]
+                })
             };
 
             if (user.roles && user.roles.find(function (r) {
                     return r === 'administrator'
                 })) {
-                dataFields['users'] = todoUserModel.find();
+                dataFields['users'] = todoUserModel.find({roles: {$nin: [/administrator/]}});
             }
 
             let all = [];
@@ -66,7 +76,15 @@ exports = module.exports = function (io) {
 
             if (dataFields['items']) {
                 for (let i = 0; i < dataFields['items'].length; i++) {
-                    dataFields['items'][i].assignees = getItemAssignees(dataFields['items'][i]._id);
+                    let assignees = await getAssignees(dataFields['items'][i].assignees);
+                    dataFields['items'][i].assignees = [];
+                    for (let j = 0; j < assignees.length; j++) {
+                        dataFields['items'][i].assignees.push({
+                            _id: assignees[j]._id,
+                            email: assignees[j].email,
+                            username: assignees[j].username,
+                        })
+                    }
                 }
             }
 
@@ -93,6 +111,7 @@ exports = module.exports = function (io) {
                         let u = {username: usr, email: user.email, _id: user._id, roles: user.roles || []};
                         u.token = jwt.sign(u, global.tokenKey);
                         let response = {adminUser: u, todoData: await getData(user)};
+                        //socket.join(u.username);
                         socket.emit('logged in', response);
                     } else {
                         socket.emit('login failed', 'Invalid username or password!');
@@ -108,8 +127,9 @@ exports = module.exports = function (io) {
                 user.token = msg.token;
                 user.roles = await getUserRole(user.username);
                 let response = {adminUser: user, todoData: await getData(user)};
-
-                socket.emit('token-authorized', response);
+                socket.join(user.username);
+                io.to(user.username).emit('token-authorized', response);
+                //socket.emit('token-authorized', response);
             }, function (err) {
                 socket.emit('token-authorized', err);
             });

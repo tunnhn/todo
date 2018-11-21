@@ -1,0 +1,15 @@
+<todo-users v-if="adminUser !== false && currentPage==='users'" :todo-data="todoData" inline-template>
+    <div id="todo-users">
+        <ul class="browse-users browse-items">
+            <template>
+                <li v-for="(user, index) in todoData.users" class="item">
+                    <span class="item__user-avatar">{{getUserAvatar(user)}}</span>
+                    <div class="item-name">{{getUserNiceName(user)}}</div>
+                    <div class="item-actions">
+                        <a class="remove" @click="_remove($event, user._id)"></a>
+                    </div>
+                </li>
+            </template>
+        </ul>
+    </div>
+</todo-users>
