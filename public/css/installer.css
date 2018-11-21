@@ -1,0 +1,130 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  color: #444;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-size: 13px;
+  line-height: 1.4em; }
+
+.button {
+  border: 1px solid #DDD;
+  border-radius: 3px;
+  background: #F5F5F5;
+  padding: 8px 12px;
+  display: inline-block;
+  line-height: 1;
+  outline: none;
+  box-shadow: none; }
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  padding: 5px;
+  border-radius: 4px;
+  background: #FFF;
+  border: 1px solid #DDD;
+  font-size: 14px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 29px;
+  color: #999;
+  width: 100%; }
+
+a {
+  cursor: pointer; }
+
+.message {
+  margin: 0 0 10px 0;
+  color: #00bcd4; }
+  .message.error {
+    color: #FF0000; }
+
+.todo__label {
+  display: inline-block;
+  font-size: 11px;
+  background: #DDD;
+  border-radius: 3px;
+  padding: 0px 5px;
+  line-height: 21px;
+  vertical-align: middle;
+  height: 21px; }
+
+.form-row {
+  margin: 0 0 10px 0; }
+  .form-row label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #666; }
+  .form-row input[type="text"] {
+    width: 100%; }
+
+.block-heading {
+  margin: 0 0 20px 0; }
+
+.block {
+  padding: 20px; }
+
+.browse-items {
+  list-style: none;
+  margin: 0 0 20px 0;
+  padding: 0;
+  position: relative;
+  border-top: 1px solid #EEE; }
+  .browse-items .item {
+    display: flex;
+    padding: 0 10px;
+    border-bottom: 1px solid #EEE;
+    height: 35px;
+    line-height: 35px;
+    cursor: pointer;
+    position: relative; }
+    .browse-items .item .item__user-avatar {
+      display: inline-block;
+      width: 25px;
+      height: 25px;
+      vertical-align: middle;
+      border-radius: 50%;
+      margin: 5px 10px 0 0;
+      background: #DDD;
+      text-align: center;
+      line-height: 25px;
+      color: #FFF; }
+    .browse-items .item.active:before {
+      background: #92f3ff;
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 0;
+      opacity: 0.1; }
+
+#todo-installer {
+  width: 600px;
+  max-width: 90%;
+  margin: 50px auto;
+  background: #F5F5F5;
+  padding: 10px 20px;
+  border: 1px solid #DDD;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px; }
+  #todo-installer .welcome {
+    font-size: 18px; }
+  #todo-installer .installer__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0; }
+  #todo-installer .step .installer__step-heading {
+    font-size: 16px; }
+  #todo-installer .install-actions .next, #todo-installer .install-actions .install {
+    float: right; }
+  #todo-installer .install-actions:after {
+    content: '';
+    display: block;
+    clear: both; }
