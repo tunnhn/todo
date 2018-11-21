@@ -1,0 +1,61 @@
+<authentication inline-template :admin-user="adminUser" v-if="!adminUser && !checkedLogin"
+                @update-admin-user="_updateAdminUser">
+    <div>
+        <div id="todo-login" v-show="screen==='login'">
+            <p v-show="getMessage()" class="message" :class="getMessageClass()">{{getMessage()}}</p>
+
+            <p class="form-row">
+                <label>Username</label>
+                <input type="text" v-model="loginAuth.usr" value="admin" @keyup="_maybeLogin($event)">
+            </p>
+
+            <p class="form-row">
+                <label>Password</label>
+                <input type="password" v-model="loginAuth.pwd" value="admin" @keyup="_maybeLogin($event)">
+            </p>
+
+            <div class="form-row">
+                <button class="button" @click="_login">Login</button>
+                <p>Don't have account? <a href="" @click="_showForm($event, 'register');">Register</a></p>
+            </div>
+        </div>
+        <div id="todo-register" v-show="screen==='register'">
+            <p v-show="getMessage()" class="message" :class="getMessageClass()">{{getMessage()}}</p>
+
+            <p class="form-row">
+                <label>First Name</label>
+                <input type="text" v-model="registerAccount.firstName" name="reg-firstName" value=""
+                       @keyup="_maybeRegister($event)">
+            </p>
+
+            <p class="form-row">
+                <label>Last Name</label>
+                <input type="text" v-model="registerAccount.lastName" name="reg-lastName" value=""
+                       @keyup="_maybeRegister($event)">
+            </p>
+
+            <p class="form-row">
+                <label>Email</label>
+                <input type="text" v-model="registerAccount.email" name="reg-email" value=""
+                       @keyup="_maybeRegister($event)">
+            </p>
+
+            <p class="form-row">
+                <label>Username</label>
+                <input type="text" v-model="registerAccount.username" name="reg-username" value=""
+                       @keyup="_maybeRegister($event)">
+            </p>
+
+            <p class="form-row">
+                <label>Password</label>
+                <input type="password" v-model="registerAccount.password" name="reg-password" value=""
+                       @keyup="_maybeRegister($event)">
+            </p>
+
+            <div class="form-row">
+                <button class="button" @click="_register">Register</button>
+                <p>Have an account? <a href="" @click="_showForm($event, 'login')">Login</a></p>
+            </div>
+        </div>
+    </div>
+</authentication>

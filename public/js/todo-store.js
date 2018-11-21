@@ -73,7 +73,16 @@
             },
             addUser: function (state, user) {
                 state.users.push(user)
-            }
+            },
+            removeUser: function (state, data) {
+                var at = state.users.findIndex(function (a, b) {
+                    return a._id === data.user;
+                });
+
+                if (at !== -1) {
+                    state.users.splice(at, 1);
+                }
+            },
         };
 
         var actions = {};

@@ -1,5 +1,5 @@
 const Mongoose = require('mongoose');
-
+const Config = require('../modules/config')();
 Mongoose.set('debug', true);
 
 /**
@@ -9,7 +9,7 @@ Mongoose.set('debug', true);
  * @returns {Connection}
  */
 module.exports = (options = {}) => {
-    let uri = 'mongodb://admin:admin1234@ds241493.mlab.com:41493/nodejs';
+    let uri = Config.get('uri', 'DB') || 'mongodb://admin:admin1234@ds241493.mlab.com:41493/nodejs';
 
     // If the node process ends, close the mongoose connection
     process.on('SIGINT', () => {
@@ -21,6 +21,7 @@ module.exports = (options = {}) => {
 
     const connection = Mongoose
         .createConnection(uri, options, () => {
+            console.log('Connected to ', uri)
         })
 
     connection.on('error', (error) => {

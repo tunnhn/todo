@@ -43,8 +43,9 @@ extend(Installer.prototype, {
 
         let connection = Mongoose
             .createConnection(this.config.mongodb, {});
-
+        console.log(this.config);
         connection.on('connected', () => {
+
             resolve && resolve(connection);
         })
 
@@ -53,7 +54,7 @@ extend(Installer.prototype, {
         });
     },
     createCollections: async function (connection, cb) {
-        let collections = ['users', 'groups', 'items'],
+        let collections = ['users', 'groups', 'items', 'comments'],
             collectionName,
             i, c;
         for (i = 0; i < collections.length; i++) {

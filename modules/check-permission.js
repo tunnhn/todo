@@ -6,18 +6,30 @@ let thisToken = 0,
             thisToken = tk;
             thisKey = key;
         },
-        check: async function (resolve, reject) {
+        check: async function (role, resolve, reject) {
             jwt.verify(thisToken || global.token, thisKey || global.tokenKey, function (err, decode) {
                 if (err) {
                     return reject && reject(err);
+                }
+
+                if (role) {
+                    if (!decode.roles) {
+                        return reject && reject(err);
+                    }
+
+                    if (!decode.roles.find(function (r) {
+                            return r === role;
+                        })) {
+                        return reject && reject(err);
+                    }
                 }
                 resolve && resolve(decode)
             });
 
         },
-        cb: function (resolve, reject) {
+        cb: function (role, resolve, reject) {
             return function (req, res, next) {
-                permission.check(function (data) {
+                permission.check(role, function (data) {
                     if (resolve) {
                         resolve(req, res, next);
                     } else {

@@ -84,6 +84,7 @@
                     return (Todo.dataStore.getters['all'].users || []).length;
                 },
                 isAdmin: function () {
+                    console.log(this.adminUser)
                     return this.adminUser && this.adminUser.roles && this.adminUser.roles.find(function (r) {
                             return r === 'administrator';
                         })

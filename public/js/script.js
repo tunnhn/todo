@@ -6,6 +6,11 @@
 
     window.Todo = $.extend({}, window.Todo, {
         ajaxToken: '',
+        setUrl: function (url, ember, title) {
+            if (url) {
+                history.pushState({}, title, url);
+            }
+        },
         doAjax: function (action, data, type, proxy) {
             return new Promise(function (resolve, reject) {
                 $.ajax({
@@ -147,6 +152,16 @@
             };
 
             return debounced;
+        },
+        getUserAvatar: function (text) {
+            var ws = text.split(' '),
+                n = [];
+
+            for (var i = 0; i < ws.length; i++) {
+                n.push(ws[i].charAt(0).toUpperCase());
+            }
+
+            return n.join('')
         }
     });
 

@@ -42,6 +42,11 @@ const todoItem = new mongoose.Schema({
         default: []
     },
 
+    comments: {
+        type: Array,
+        default: []
+    },
+
     created: {
         type: Date,
         default: Date.now

@@ -6,7 +6,7 @@ let Config = function (configFile) {
     this.configFile = configFile;
     this.config = false;
 
-    if (fs.existsSync(this.configFile)) {
+    if (this.exists()) {
         this.config = ini.parse(fs.readFileSync(this.configFile, 'utf-8'));
     } else {
 
@@ -24,6 +24,9 @@ extend(Config.prototype, {
             return this.config ? this.config[name] : undefined;
         }
         return this.config;
+    },
+    exists: function () {
+        return fs.existsSync(this.configFile)
     },
     set: function (name, value, group) {
         if (!this.config[group]) {
