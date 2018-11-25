@@ -4,6 +4,7 @@ const todoUserModel = require('../models/user');
 let checkPermission = require('../modules/check-permission');
 const Config = require('../modules/config')();
 let hasher = require('wordpress-hash-node');
+const UserModule = require('../modules/user')();
 function generatePassword(password) {
 
     return hasher.HashPassword(password);
@@ -77,6 +78,15 @@ module.exports = function (app) {
         })
 
     });
+
+    router.get('/get-user-data/:user', checkPermission.cb(), async function (req, res) {
+        let user = app.getRequest('user');
+
+        // Remove items in group being removed and then remove the group
+        res.send(await
+            UserModule.getData(user)
+        )
+    })
 
     app.use(router);
 }

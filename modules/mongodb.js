@@ -2,6 +2,7 @@ const Mongoose = require('mongoose');
 const Config = require('../modules/config')();
 Mongoose.set('debug', true);
 
+console.log('hello ')
 /**
  * Connect to database.
  *
