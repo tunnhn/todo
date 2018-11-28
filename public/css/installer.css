@@ -14,7 +14,10 @@ html, body {
   display: inline-block;
   line-height: 1;
   outline: none;
-  box-shadow: none; }
+  box-shadow: none;
+  vertical-align: middle;
+  color: #777;
+  font-size: 14px; }
 
 input[type="text"],
 input[type="email"],
@@ -32,6 +35,12 @@ textarea {
   height: 29px;
   color: #999;
   width: 100%; }
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+  height: 32px; }
 
 a {
   cursor: pointer; }
@@ -93,6 +102,8 @@ a {
       text-align: center;
       line-height: 25px;
       color: #FFF; }
+    .browse-items .item .item-actions {
+      flex: 0 0 40px; }
     .browse-items .item.active:before {
       background: #92f3ff;
       content: '';
@@ -102,7 +113,8 @@ a {
       right: 0;
       bottom: 0;
       z-index: 0;
-      opacity: 0.1; }
+      opacity: 0.1;
+      pointer-events: none; }
 
 #todo-installer {
   width: 600px;

@@ -1,5 +1,5 @@
 Vue.component('todo-groups', {
-    props: ['todoData', 'selectedGroup', 'adminUser'],
+    props: ['todoData', 'selectedGroup', 'adminUser', 'currentPage', 'currentChildPage'],
     data: function () {
         return {
             group: false,

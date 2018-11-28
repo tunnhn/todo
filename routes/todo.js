@@ -4,6 +4,9 @@ const todoGroupModel = require('../models/todo-group');
 const todoItemModel = require('../models/todo-item');
 const todoUserModel = require('../models/user');
 const todoCommentModel = require('../models/todo-comment');
+const todoNotificationModel = require('../models/todo-notification');
+const UserModule = require('../modules/user')();
+
 const indexPage = require('../modules/index-page');
 let checkPermission = require('../modules/check-permission');
 
@@ -234,16 +237,66 @@ module.exports = function (app) {
         commentData.item = itemId;
 
         let comment = new todoCommentModel(commentData);
-        comment.save(function () {
+        comment.save(async function () {
             commentData = JSON.parse(JSON.stringify(comment));
             commentData.user = {
                 _id: data[1]._id,
                 username: data[1].username,
                 email: data[1].email
-            }
+            };
+
+            let noti = await addNotification({
+                user: data[1]._id,
+                object: comment._id,
+                objectType: 'comment',
+                content: '{{USER}} commented on {{ITEM}}',
+                objectParent: [itemId]
+            });
+
             app.io.emit('comment-added', commentData);
-            //s.emit('comment-added', commentData);
+            app.io.emit('new-notification', noti);
+
             res.send(commentData);
+        });
+    });
+
+    router.post('/delete-item-comment/:id', checkPermission.cb(), async function (req, res) {
+        let commentId = app.getRequest('id'),
+            comment = await todoCommentModel.findOne({_id: commentId});
+
+        await checkPermission.check('', function (user) {
+            if (user._id == comment.user) {
+                comment.remove().then(function () {
+                    res.send({comment: comment})
+                })
+            }
+        });
+
+    });
+
+    router.get('/notifications', checkPermission.cb(), function (req, res) {
+        checkPermission.check('', async function (user) {
+
+        });
+    });
+
+    router.get('/notifications/count', checkPermission.cb(), function (req, res) {
+        checkPermission.check('', async function (user) {
+            let dbUser = await todoUserModel.findOne({_id: user._id}),
+                notifications = await UserModule.getNotifications(user._id),
+                x;
+
+            if (notifications.length !== dbUser.noti_0) {
+                dbUser.noti_0 = (dbUser.noti_0 || 0);
+
+                let newCount = notifications.length - (dbUser.noti_0 || 0);
+                dbUser.noti_1 = newCount;
+                dbUser.save().then(async function () {
+                    res.send({notifications: notifications, noti_0: dbUser.noti_0, noti_1: dbUser.noti_1});
+                })
+            } else {
+                res.send([]);
+            }
         });
     });
 
@@ -255,5 +308,11 @@ module.exports = function (app) {
     });
 
     app.use('/', router);
+
+    async function addNotification(data) {
+        var noti = new todoNotificationModel(data);
+
+        return await noti.save();
+    }
 
 };

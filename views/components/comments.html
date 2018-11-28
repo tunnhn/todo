@@ -5,14 +5,18 @@
             <ul class="browse-items todo-comments">
                 <li class="item comment" v-for="(comment, index) in comments">
                     <span class="item__user-avatar">{{getUserAvatar(comment.user.username)}}</span>
-                    {{comment.content}}
+                    <div class="item__user-comment">{{comment.content}}</div>
+                    <div class="item-actions" v-show="isCurrentUser(comment.user)">
+                        <a class="edit"></a>
+                        <a class="remove" @click="_delete($event, comment._id)"></a>
+                    </div>
                 </li>
             </ul>
         </div>
         <div class="todo-post-comment">
             <div class="form-row">
                 <label>Comment</label>
-                <textarea v-model="newComment.content"></textarea>
+                <textarea v-model="newComment.content" @keydown="_maybeAddComment($event)"></textarea>
             </div>
             <div class="form-row">
                 <button class="button" @click="_addComment">Submit</button>

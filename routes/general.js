@@ -23,7 +23,7 @@ module.exports = function (app) {
     // Combine js files
     app.get('/js/todo-components', function (req, res, next) {
         let fs = require('fs'),
-            components = ['base', 'authentication', 'users', 'groups', 'item-users', 'items', 'group-users', 'comments'],
+            components = ['base', 'authentication', 'mainmenu', 'users', 'groups', 'item-users', 'items', 'group-users', 'comments'],
             code = '',
             i, n = components.length,
             rootPath = require('path').dirname(__dirname);

@@ -5,7 +5,9 @@
     <title>Todo</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="<%- baseUrl %>/css/todo.css">
-    <link rel="stylesheet" type="text/css" href="<%- baseUrl %>/fontawesome/css/all.css">
+    <!--<link rel="stylesheet" type="text/css" href="<%- baseUrl %>/fontawesome/css/all.css">-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+          integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="<%- baseUrl %>/colorpicker/css/colorpicker.css">
     <link rel="stylesheet" type="text/css" href="<%- baseUrl %>/datetimepicker/jquery.datetimepicker.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
@@ -24,9 +26,22 @@
 <body>
 <div id="todo-app">
     <div id="header">
-        {{currentTime}}
-        <span class="user" v-show="adminUser.username">Hi, {{adminUser.username}}. <a
-                @click="_logout($event)">Logout</a></span>
+        <div class="header-left">{{currentTime}} | {{currentPage}}</div>
+        <div class="header-right">
+            <div class="user _hr1i" v-show="adminUser.username">
+                <span>Hi, {{adminUser.username}}</span>
+                <ul class="_um">
+                    <li><a href="">Logout</a></li>
+                </ul>
+            </div>
+            <div class="notification _hr1i icon">
+                <span class="fas fa-bell"></span>
+                <span class="count" v-if="todoData.noti_1">{{todoData.noti_1}}</span>
+                <ul class="_um" v-if="todoData.notifications">
+                    <li v-for="(noti, index) in todoData.notifications">{{noti.content}}</li>
+                </ul>
+            </div>
+        </div>
     </div>
     <div id="content">
 
@@ -36,15 +51,17 @@
         <div id="todo-page" v-if="adminUser !== false">
             <div id="sidebar" v-if="adminUser !== false">
                 <div id="todo-menu">
-                    <ul class="todo-menu">
-                        <li class="menu-item" v-show="isAdmin()" :class="[currentPage === 'users' ? 'active' : '']">
-                            <a href="" @click="_showPage($event, 'users');">Users
-                                ({{countUsers()}})</a>
+                    <ul class="todo-menu menu">
+                        <li class="menu-item" :class="[currentPage=='users' ? 'active' : '']">
+                            <a href="" @click="_showPage($event, 'users')">
+                                <i class="icon fas fa-users"></i>
+                                <div class="menu-name">Users</div>
+                            </a>
                         </li>
+                        <!-- todo-groups -->
+                        <%- components.todoGroups %>
                     </ul>
                 </div>
-                <!-- todo-groups -->
-                <%- components.todoGroups %>
 
             </div>
 
@@ -59,8 +76,6 @@
 
     <div id="footer"></div>
 </div>
-<script>
-    var todoConfig = <%- JSON.stringify(config);%>
-</script>
+<%- jsConfig %>
 </body>
 </html>

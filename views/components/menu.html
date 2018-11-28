@@ -1,0 +1,29 @@
+<todo-mainmenu :todo-data="todoData" @show-menu-item="_onShowMenuItem" :current-page="currentPage"
+               :current-menu="currentPage" :menu-items="getMenuItems()" inline-template>
+    <div id="todo-menu">
+        <ul class="todo-menu menu">
+            <li class="menu-item" :class="[currentMenu=='users' ? 'active' : '']">
+                <a href="" @click="_showPage($event, 'users')">
+                    <i class="icon fas fa-users"></i>
+                    <div class="menu-name">Users</div>
+                </a>
+            </li>
+            <li class="menu-item" :class="[currentMenu=='todo-items' ? 'active' : '']">
+                <a href="" @click="_showPage($event, 'todo-items')">
+                    <i class="icon"></i>
+                    <div class="menu-name">Todo</div>
+                    <span class="count">{{countItems('')}}</span>
+                </a>
+                <ul class="submenu menu" v-if="groups.length">
+                    <li class="menu-item" v-for="(group, groupId) in groups">
+                        <a href=""
+                           @click="_showPage($event, 'todo-items', group._id)">
+                            <div class="menu-name">{{group.name}}</div>
+                            <span class="count">{{countItems(group._id)}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</todo-mainmenu>

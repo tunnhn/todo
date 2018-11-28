@@ -1,29 +1,29 @@
 <todo-groups :todo-data="todoData" inline-template @select-group="_selectGroup"
-             :selected-group="selectedGroup" :admin-user="adminUser">
-    <div id="todo-groups">
-        <ul class="list-groups todo-menu">
-            <li class="group menu-item" @click="_select($event, -1)"
-                :class="selectedGroup == -1 ? 'active' : ''">
-                <span>All ({{countItems(-1)}})</span>
-            </li>
-            <li v-show="countItems('') > 0" class="group menu-item" @click="_select($event, '')"
-                :class="selectedGroup == '' ? 'active' : ''">
-                <span>No group ({{countItems('')}})</span>
-            </li>
-            <li class="group menu-item" v-for="(group, index) in todoGroups"
-                @click="_select($event, group._id)"
-                class="group"
-                :class="groupClass(group)">
-                <div class="group-name">{{group.name}} ({{countItems(group._id)}})</div>
-                <div class="group-actions">
-                    <a class="edit" @click="_edit($event, group)"></a>
-                    <a class="remove" @click="_remove($event, group._id)"></a>
+             :selected-group="selectedGroup"
+             :admin-user="adminUser"
+             :current-page="currentPage"
+             :current-child-page="currentChildPage">
+    <li class="menu-item menu-groups" :class="[currentPage=='todo-items' ? 'active' : '']">
+        <a href="" @click="_showPage($event, 'todo-items')">
+            <i class="icon fas fa-clipboard-list"></i>
+            <div class="menu-name">Todo</div>
+            <span class="count">{{countItems('')}}</span>
+        </a>
+        <ul class="submenu menu todo-groups" v-if="todoGroups.length">
+            <li class="menu-item" v-for="(group, groupId) in todoGroups">
+                <div @click="_showPage($event, 'todo-items', group._id)">
+                    <div class="menu-name">{{group.name}}</div>
+                    <span class="count" :style="{'background-color': group.color}">{{countItems(group._id)}}</span>
+                    <div class="group-actions">
+                        <a class="edit" @click="_edit($event, group)"></a>
+                        <a class="remove" @click="_remove($event, group._id)"></a>
+                    </div>
                 </div>
             </li>
-            <li class="add" v-show="group===false">
-                <a class="button" @click="_add($event)">Add Group</a>
-            </li>
         </ul>
+        <div class="add-group" v-show="group===false && currentPage === 'todo-items'">
+            <a class="button" @click="_add($event)">Add Group</a>
+        </div>
         <div id="group__add-form" v-show="group!==false">
             <div class="form-window">
                 <p v-if="errorMsg" class="message error">{{errorMsg}}</p>
@@ -41,5 +41,32 @@
                 </p>
             </div>
         </div>
-    </div>
+    </li>
+
+    <!--<div id="todo-groups">-->
+    <!--<ul class="list-groups todo-menu menu">-->
+    <!--<li class="group menu-item" @click="_select($event, -1)"-->
+    <!--:class="selectedGroup == -1 ? 'active' : ''">-->
+    <!--<span>All ({{countItems(-1)}})</span>-->
+    <!--</li>-->
+    <!--<li v-show="countItems('') > 0" class="group menu-item" @click="_select($event, '')"-->
+    <!--:class="selectedGroup == '' ? 'active' : ''">-->
+    <!--<span>No group ({{countItems('')}})</span>-->
+    <!--</li>-->
+    <!--<li class="group menu-item" v-for="(group, index) in todoGroups"-->
+    <!--@click="_select($event, group._id)"-->
+    <!--class="group"-->
+    <!--:class="groupClass(group)">-->
+    <!--<div class="group-name">{{group.name}} ({{countItems(group._id)}})</div>-->
+    <!--<div class="group-actions">-->
+    <!--<a class="edit" @click="_edit($event, group)"></a>-->
+    <!--<a class="remove" @click="_remove($event, group._id)"></a>-->
+    <!--</div>-->
+    <!--</li>-->
+    <!--<li class="add" v-show="group===false">-->
+    <!--<a class="button" @click="_add($event)">Add Group</a>-->
+    <!--</li>-->
+    <!--</ul>-->
+    <!---->
+    <!--</div>-->
 </todo-groups>

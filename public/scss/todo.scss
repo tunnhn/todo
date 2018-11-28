@@ -9,10 +9,107 @@
     background: #00bcd4;
     line-height: 40px;
     padding: 0 20px;
-    .user {
-        float: right;
-        color: #FFF;
+    display: flex;
+    .header-left {
+        flex: 1 1 auto;
+        justify-content: flex-start;
     }
+    .header-right {
+        flex: 0 0 auto;
+        justify-content: flex-end;
+        display: flex;
+        ._hr1i {
+            display: inline-block;
+            height: 40px;
+            padding: 0 5px;
+            cursor: pointer;
+            &.icon {
+                width: 40px;
+                text-align: center;
+                color: #FFF;
+                line-height: 40px;
+                padding: 0;
+                font-size: 20px;
+
+                span.count {
+                    display: inline-block;
+                    position: absolute;
+                    top: 0;
+                    height: 16px;
+                    line-height: 16px;
+                    background: #FF0000;
+                    border-radius: 8px;
+                    font-size: 10px;
+                    min-width: 16px;
+                }
+            }
+            &:hover {
+                background: #00acc3;
+            }
+        }
+        .user {
+            color: #FFF;
+            position: relative;
+            ._um {
+                display: none;
+                position: absolute;
+                margin: 0;
+                padding: 0;
+                width: 100px;
+                background: #00acc4;
+                right: 0;
+                z-index: 100;
+                li {
+                    margin: 0;
+                    padding: 0;
+                    line-height: 1;
+                    a {
+                        display: block;
+                        padding: 8px 10px;
+                        text-decoration: none;
+                        color: #FFF;
+                    }
+                }
+            }
+            &:hover {
+                ._um {
+                    display: block;
+                }
+            }
+        }
+        .notification {
+            position: relative;
+            ._um {
+                display: none;
+                position: absolute;
+                margin: 0;
+                padding: 0;
+                width: 300px;
+                background: #00acc4;
+                right: 0;
+                z-index: 100;
+                font-size: 14px;
+                li {
+                    margin: 0;
+                    padding: 10px;
+                    line-height: 1;
+                    text-align: left;
+                    a {
+                        display: block;
+                        padding: 8px 10px;
+                        text-decoration: none;
+                        color: #FFF;
+                    }
+                }
+            }
+            &:hover {
+                ._um {
+                    display: block;
+                }
+            }
+        }
+    }
+
 }
 
 #todo-login,
@@ -62,33 +159,117 @@
 
 #sidebar {
     flex: 0 0 250px;
-    background: #ecfbff;
+    background: #004d61;
     border-right: 1px solid #DDD;
     overflow: auto;
-    .todo-menu {
+    .menu {
         list-style: none;
         margin: 5px 0;
         padding: 0;
         .menu-item {
-            padding: 7px 10px;
             font-size: 15px;
             cursor: pointer;
-            > * {
+            position: relative;
+            > a, > span {
+                display: block;
                 text-decoration: none;
                 color: #666;
             }
-            &.active {
-                font-weight: bold;
+            .icon {
+                float: left;
+                display: block;
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                text-align: center;
+                font-size: 18px;
+                color: #FFF;
             }
+            .menu-name {
+                padding: 11px 0;
+                color: #FFF;
+            }
+
+            .count {
+                display: inline-block;
+                float: right;
+                padding: 5px 8px;
+                font-size: 10px;
+                line-height: 1;
+                margin-right: 5px;
+                border-radius: 3px;
+                position: absolute;
+                top: 10px;
+                right: 5px;
+            }
+
+            > .menu {
+                display: none;
+                margin: 0;
+                background: #2e4046;
+                .menu-item {
+                    > a, > span, > div {
+                        padding-left: 40px;
+                        color: #FFF;
+                    }
+                }
+            }
+            &.active {
+                > a, > span {
+                    font-weight: bold;
+                    background: #37464a;
+                    color: #FFF;
+                }
+                > .menu {
+                    display: block;
+                    .menu-item {
+                        color: #FFF;
+                        &:hover {
+                            background: #1c3846;
+                        }
+                    }
+                }
+            }
+            > a:hover, > span:hover {
+                background: #1c3846;
+            }
+        }
+    }
+
+    .todo-groups {
+        .menu-item {
+            .group-actions {
+                display: none;
+                width: 80px;
+                position: absolute;
+                top: 0;
+                right: 0;
+                height: 40px;
+                a {
+                    display: block;
+                    width: 40px;
+                    height: 40px;
+                    text-align: center;
+                    line-height: 40px;
+                    flex: 0 0 40px;
+                    visibility: visible;
+                }
+            }
+
             &:hover {
-                background: #FFF;
+                .count {
+                    display: none;
+                }
+                .group-actions {
+                    display: flex;
+                }
             }
         }
     }
 }
 
 #todo-list,
-#todo-users{
+#todo-users {
     flex: 1 1 0;
     overflow: auto;
 }
@@ -105,10 +286,28 @@
 
 #todo-list {
     overflow: auto;
+}
+
+#todo-app {
     #list-actions {
         height: 30px;
         margin: 10px;
         line-height: 30px;
+        display: flex;
+        .left,
+        .right {
+            flex: 0 0 50%;
+        }
+
+        .left {
+            .search-box {
+                width: 200px;
+            }
+        }
+
+        .right {
+            text-align: right;
+        }
     }
     .browse-items {
         list-style: none;
@@ -120,6 +319,15 @@
             height: 35px;
             line-height: 35px;
             cursor: pointer;
+        }
+    }
+}
+
+.menu-groups {
+    .add-group {
+        margin: 20px;
+        .button {
+            display: inline-block;
         }
     }
 }
@@ -263,14 +471,15 @@
         }
     }
 }
-.todo-post-comment{
-    textarea{
-        height:100px;
+
+.todo-post-comment {
+    textarea {
+        height: 100px;
     }
 }
 
-.assignee{
-    .assignee__user{
+.assignee {
+    .assignee__user {
 
     }
 }

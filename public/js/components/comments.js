@@ -25,6 +25,9 @@ Vue.component('todo-comments', {
         //         this.comments = comments;
         //     }
         // }
+        adminUser: function () {
+            return this.$root.adminUser
+        }
     },
     mounted: function () {
         var $vm = this;
@@ -59,6 +62,23 @@ Vue.component('todo-comments', {
                 $vm.comments = comments;
             })
         },
+        isCurrentUser: function (user) {
+            return user._id == this.adminUser._id;
+        },
+        _delete: function ($event, id) {
+            $event.preventDefault();
+
+            var $vm = this;
+            Todo.doAjax('delete-item-comment/' + id, {}, 'post').then(function (comment) {
+                var at = $vm.comments.findIndex(function (c) {
+                    return c._id == id;
+                });
+
+                if (at > -1) {
+                    $vm.comments.splice(at, 1);
+                }
+            })
+        },
         _addComment: function () {
             var $vm = this;
 
@@ -79,6 +99,12 @@ Vue.component('todo-comments', {
             }, function (r) {
                 console.log('Error:', r);
             })
+        },
+
+        _maybeAddComment: function (e) {
+            if ((e.metaKey || e.ctrlKey) && e.keyCode === 13) {
+                this._addComment();
+            }
         }
     })
 })

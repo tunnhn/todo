@@ -14,7 +14,10 @@ html, body {
   display: inline-block;
   line-height: 1;
   outline: none;
-  box-shadow: none; }
+  box-shadow: none;
+  vertical-align: middle;
+  color: #777;
+  font-size: 14px; }
 
 input[type="text"],
 input[type="email"],
@@ -32,6 +35,12 @@ textarea {
   height: 29px;
   color: #999;
   width: 100%; }
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+  height: 32px; }
 
 a {
   cursor: pointer; }
@@ -93,6 +102,8 @@ a {
       text-align: center;
       line-height: 25px;
       color: #FFF; }
+    .browse-items .item .item-actions {
+      flex: 0 0 40px; }
     .browse-items .item.active:before {
       background: #92f3ff;
       content: '';
@@ -102,16 +113,93 @@ a {
       right: 0;
       bottom: 0;
       z-index: 0;
-      opacity: 0.1; }
+      opacity: 0.1;
+      pointer-events: none; }
 
 #header {
   height: 40px;
   background: #00bcd4;
   line-height: 40px;
-  padding: 0 20px; }
-  #header .user {
-    float: right;
-    color: #FFF; }
+  padding: 0 20px;
+  display: flex; }
+  #header .header-left {
+    flex: 1 1 auto;
+    justify-content: flex-start; }
+  #header .header-right {
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    display: flex; }
+    #header .header-right ._hr1i {
+      display: inline-block;
+      height: 40px;
+      padding: 0 5px;
+      cursor: pointer; }
+      #header .header-right ._hr1i.icon {
+        width: 40px;
+        text-align: center;
+        color: #FFF;
+        line-height: 40px;
+        padding: 0;
+        font-size: 20px; }
+        #header .header-right ._hr1i.icon span.count {
+          display: inline-block;
+          position: absolute;
+          top: 0;
+          height: 16px;
+          line-height: 16px;
+          background: #FF0000;
+          border-radius: 8px;
+          font-size: 10px;
+          min-width: 16px; }
+      #header .header-right ._hr1i:hover {
+        background: #00acc3; }
+    #header .header-right .user {
+      color: #FFF;
+      position: relative; }
+      #header .header-right .user ._um {
+        display: none;
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        width: 100px;
+        background: #00acc4;
+        right: 0;
+        z-index: 100; }
+        #header .header-right .user ._um li {
+          margin: 0;
+          padding: 0;
+          line-height: 1; }
+          #header .header-right .user ._um li a {
+            display: block;
+            padding: 8px 10px;
+            text-decoration: none;
+            color: #FFF; }
+      #header .header-right .user:hover ._um {
+        display: block; }
+    #header .header-right .notification {
+      position: relative; }
+      #header .header-right .notification ._um {
+        display: none;
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        width: 300px;
+        background: #00acc4;
+        right: 0;
+        z-index: 100;
+        font-size: 14px; }
+        #header .header-right .notification ._um li {
+          margin: 0;
+          padding: 10px;
+          line-height: 1;
+          text-align: left; }
+          #header .header-right .notification ._um li a {
+            display: block;
+            padding: 8px 10px;
+            text-decoration: none;
+            color: #FFF; }
+      #header .header-right .notification:hover ._um {
+        display: block; }
 
 #todo-login,
 #todo-register {
@@ -147,24 +235,82 @@ a {
 
 #sidebar {
   flex: 0 0 250px;
-  background: #ecfbff;
+  background: #004d61;
   border-right: 1px solid #DDD;
   overflow: auto; }
-  #sidebar .todo-menu {
+  #sidebar .menu {
     list-style: none;
     margin: 5px 0;
     padding: 0; }
-    #sidebar .todo-menu .menu-item {
-      padding: 7px 10px;
+    #sidebar .menu .menu-item {
       font-size: 15px;
-      cursor: pointer; }
-      #sidebar .todo-menu .menu-item > * {
+      cursor: pointer;
+      position: relative; }
+      #sidebar .menu .menu-item > a, #sidebar .menu .menu-item > span {
+        display: block;
         text-decoration: none;
         color: #666; }
-      #sidebar .todo-menu .menu-item.active {
-        font-weight: bold; }
-      #sidebar .todo-menu .menu-item:hover {
-        background: #FFF; }
+      #sidebar .menu .menu-item .icon {
+        float: left;
+        display: block;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 18px;
+        color: #FFF; }
+      #sidebar .menu .menu-item .menu-name {
+        padding: 11px 0;
+        color: #FFF; }
+      #sidebar .menu .menu-item .count {
+        display: inline-block;
+        float: right;
+        padding: 5px 8px;
+        font-size: 10px;
+        line-height: 1;
+        margin-right: 5px;
+        border-radius: 3px;
+        position: absolute;
+        top: 10px;
+        right: 5px; }
+      #sidebar .menu .menu-item > .menu {
+        display: none;
+        margin: 0;
+        background: #2e4046; }
+        #sidebar .menu .menu-item > .menu .menu-item > a, #sidebar .menu .menu-item > .menu .menu-item > span, #sidebar .menu .menu-item > .menu .menu-item > div {
+          padding-left: 40px;
+          color: #FFF; }
+      #sidebar .menu .menu-item.active > a, #sidebar .menu .menu-item.active > span {
+        font-weight: bold;
+        background: #37464a;
+        color: #FFF; }
+      #sidebar .menu .menu-item.active > .menu {
+        display: block; }
+        #sidebar .menu .menu-item.active > .menu .menu-item {
+          color: #FFF; }
+          #sidebar .menu .menu-item.active > .menu .menu-item:hover {
+            background: #1c3846; }
+      #sidebar .menu .menu-item > a:hover, #sidebar .menu .menu-item > span:hover {
+        background: #1c3846; }
+  #sidebar .todo-groups .menu-item .group-actions {
+    display: none;
+    width: 80px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 40px; }
+    #sidebar .todo-groups .menu-item .group-actions a {
+      display: block;
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      line-height: 40px;
+      flex: 0 0 40px;
+      visibility: visible; }
+  #sidebar .todo-groups .menu-item:hover .count {
+    display: none; }
+  #sidebar .todo-groups .menu-item:hover .group-actions {
+    display: flex; }
 
 #todo-list,
 #todo-users {
@@ -177,20 +323,35 @@ a {
 
 #todo-list {
   overflow: auto; }
-  #todo-list #list-actions {
-    height: 30px;
-    margin: 10px;
-    line-height: 30px; }
-  #todo-list .browse-items {
-    list-style: none;
-    padding: 0;
-    border-top: 1px solid #EEE; }
-    #todo-list .browse-items .item {
-      padding: 0px 10px;
-      border-bottom: 1px solid #DDD;
-      height: 35px;
-      line-height: 35px;
-      cursor: pointer; }
+
+#todo-app #list-actions {
+  height: 30px;
+  margin: 10px;
+  line-height: 30px;
+  display: flex; }
+  #todo-app #list-actions .left,
+  #todo-app #list-actions .right {
+    flex: 0 0 50%; }
+  #todo-app #list-actions .left .search-box {
+    width: 200px; }
+  #todo-app #list-actions .right {
+    text-align: right; }
+
+#todo-app .browse-items {
+  list-style: none;
+  padding: 0;
+  border-top: 1px solid #EEE; }
+  #todo-app .browse-items .item {
+    padding: 0px 10px;
+    border-bottom: 1px solid #DDD;
+    height: 35px;
+    line-height: 35px;
+    cursor: pointer; }
+
+.menu-groups .add-group {
+  margin: 20px; }
+  .menu-groups .add-group .button {
+    display: inline-block; }
 
 .group,
 .item {

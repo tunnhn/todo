@@ -1,10 +1,11 @@
 Vue.component('todo-items', {
-    props: ['todoData', 'selectedGroup', 'adminUser'],
+    props: ['todoData', 'adminUser', 'currentChildPage'],
     data: function () {
         return {
             items: [],
             item: false,
             selectedItem: false,
+            selectedGroup: 'no-group',
             errorMsg: ''
         }
     },
@@ -15,6 +16,9 @@ Vue.component('todo-items', {
                     $vm.$('.todo__item-name').focus();
                 }, 10, this);
             }
+        },
+        currentChildPage: function (a, b) {
+            this.selectedGroup = a ? a : '';
         }
     },
     computed: {
@@ -44,11 +48,11 @@ Vue.component('todo-items', {
                 groups = Todo.listPluck(this.todoGroups, '_id'),
                 i;
 
-            if (-1 === group) {
+            if ('' === group) {
                 items = allItems;
             } else {
                 for (i = 0; i < allItems.length; i++) {
-                    if ((group && allItems[i].group == group) || ('' === group && (!allItems[i].group || $.inArray(allItems[i].group, groups) === -1))) {
+                    if ((group && allItems[i].group == group) || ('no-group' === group && (!allItems[i].group || $.inArray(allItems[i].group, groups) === -1))) {
                         items.push(allItems[i]);
                     }
                 }
@@ -150,6 +154,9 @@ Vue.component('todo-items', {
                     $vm.item = false;
                 });
             }
+        },
+        _editGroup: function (e) {
+            this.$emit('edit-group');
         },
         _edit: function (e, item) {
             e.preventDefault();

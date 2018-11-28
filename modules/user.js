@@ -1,18 +1,40 @@
 const todoUserModel = require('../models/user');
 const todoGroupModel = require('../models/todo-group');
 const todoItemModel = require('../models/todo-item');
+const todoNotificationModel = require('../models/todo-notification');
 let AdminUser = require('../models/admin-user');
 
 exports = module.exports = function () {
-    async function getData(user) {
+    async function getNotifications(userId) {
+        let items = await todoItemModel.find({
+            $or: [{user: userId}, {assignees: {$in: userId}}]
+        }), i, n, itemIds = [], notifications;
 
+        if (items) {
+            for (i = 0, n = items.length; i < n; i++) {
+                itemIds.push(items[i]._id.toString());
+            }
+
+            notifications = await todoNotificationModel.find({
+                $or: [{object: {$in: itemIds}}, {objectParent: {$in: itemIds}}],
+                user: {$nin: userId}
+            });
+
+            return notifications;
+        }
+
+        return [];
+    }
+
+    async function getData(user) {
+        let userId = user._id.toString();
         let dataFields = {
-            'groups': todoGroupModel.find({user: user._id}),
+            'groups': todoGroupModel.find({user: userId}),
             'items': todoItemModel.find({
                 $or: [{
-                    user: user._id
+                    user: userId
                 }, {
-                    assignees: {$in: user._id}
+                    assignees: {$in: userId}
                 }]
             })
         };
@@ -39,11 +61,11 @@ exports = module.exports = function () {
             }
         }
 
-        if (dataFields['groups']) {
-            for (let i = 0; i < dataFields['groups'].length; i++) {
-                dataFields['groups'][i].assignees = await getGroupAssignees(dataFields['groups'][i]._id);
-            }
-        }
+        // if (dataFields['groups']) {
+        //     for (let i = 0; i < dataFields['groups'].length; i++) {
+        //         dataFields['groups'][i].assignees = await getGroupAssignees(dataFields['groups'][i]._id);
+        //     }
+        // }
 
         if (dataFields['items']) {
             for (let i = 0; i < dataFields['items'].length; i++) {
@@ -58,6 +80,10 @@ exports = module.exports = function () {
                 }
             }
         }
+
+        dataFields['notifications'] = await getNotifications(userId);
+        dataFields['noti_0'] = user.noti_0;
+        dataFields['noti_1'] = user.noti_1;
 
         return dataFields;
     }
@@ -75,12 +101,13 @@ exports = module.exports = function () {
     this.getData = async function (userId) {
         let user = await todoUserModel.findOne({_id: userId}).exec();
         if (user) {
-            return await getData({_id: user._id.toString(), roles: user.roles});
+            return await getData(user);
         }
         return false;
     }
 
     this.getUserRole = getUserRole;
+    this.getNotifications = getNotifications;
 
     return this;
 }

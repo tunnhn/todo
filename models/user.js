@@ -34,6 +34,14 @@ const adminUser = new mongoose.Schema({
         default: []
     },
 
+    noti_0: {
+        type: Number
+    },
+
+    noti_1: {
+        type: Number
+    },
+
     created: {
         type: Date,
         default: Date.now

@@ -1,13 +1,19 @@
 <todo-items v-if="adminUser !== false && currentPage==='todo-items'" :todo-data="todoData" inline-template
-            :selected-group="selectedGroup" :admin-user="adminUser"
-            @select-group="_selectGroup">
+            :selected-group="currentChildPage" :admin-user="adminUser"
+            :current-child-page="currentChildPage">
     <div id="todo-list">
         <div id="list-actions">
-            <a class="button" @click="_add($event)">Add Todo</a>
+            <div class="left">
+                <input type="text" placeholder="Search Todo..." class="search-box">
+            </div>
+            <div class="right">
+                <a class="button" @click="_add($event)">Add Todo</a>
+            </div>
         </div>
         <ul class="browse-items">
             <template v-if="getActiveGroupItems().length">
-                <li class="item" :class="[selectedItem && selectedItem._id === item._id ? 'active' : '']" v-for="(item, index) in getCachedItems()" @click="_selectItem($event, item)">
+                <li class="item" :class="[selectedItem && selectedItem._id === item._id ? 'active' : '']"
+                    v-for="(item, index) in getCachedItems()" @click="_selectItem($event, item)">
                     <div class="item-name">
                         <label>
                             <input type="checkbox" v-model="item.status" true-value="completed"

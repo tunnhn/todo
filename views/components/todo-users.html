@@ -1,5 +1,12 @@
 <todo-users v-if="adminUser !== false && currentPage==='users'" :todo-data="todoData" inline-template>
     <div id="todo-users">
+        <div id="list-actions">
+            <div class="left">
+                <input type="text" placeholder="Search user..." class="search-box">
+            </div>
+            <div class="right">
+            </div>
+        </div>
         <ul class="browse-users browse-items">
             <template>
                 <li v-for="(user, index) in todoData.users" class="item">
